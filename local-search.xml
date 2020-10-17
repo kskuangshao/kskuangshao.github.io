@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>hexo的安装以及常用命令</title>
+    <link href="/2020/10/18/hexo/"/>
+    <url>/2020/10/18/hexo/</url>
+    
+    <content type="html"><![CDATA[<h4 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h4><h5 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h5><pre><code class="hljs sas">hexo clean <span class="hljs-variable">&amp;&amp;</span> hexo g <span class="hljs-variable">&amp;&amp;</span> hexo s</code></pre><h5 id="运行和部署-第一次应该提示用户名密码"><a href="#运行和部署-第一次应该提示用户名密码" class="headerlink" title="运行和部署(第一次应该提示用户名密码)"></a>运行和部署(第一次应该提示用户名密码)</h5><pre><code class="hljs 1c">hexo clean <span class="hljs-meta">&amp;&amp; hexo deploy</span></code></pre><h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><h5 id="安装node-js-、hexo"><a href="#安装node-js-、hexo" class="headerlink" title="安装node.js 、hexo"></a>安装node.js 、hexo</h5><h5 id="生成密钥，拷贝到github上"><a href="#生成密钥，拷贝到github上" class="headerlink" title="生成密钥，拷贝到github上"></a>生成密钥，拷贝到github上</h5><pre><code class="hljs apache"><span class="hljs-attribute">ssh</span>-keygen -t rsa -b <span class="hljs-number">4096</span> -C <span class="hljs-string">&quot;cocoacm_liyiming@163.com&quot;</span></code></pre><h5 id="使用这个命令查看下"><a href="#使用这个命令查看下" class="headerlink" title="使用这个命令查看下"></a>使用这个命令查看下</h5><pre><code class="hljs nginx"><span class="hljs-attribute">ssh</span> -T git<span class="hljs-variable">@github</span>.com</code></pre><h5 id="个人的环境变量配置"><a href="#个人的环境变量配置" class="headerlink" title="个人的环境变量配置"></a>个人的环境变量配置</h5><pre><code class="hljs routeros">git<span class="hljs-built_in"> config </span>--global user.name <span class="hljs-string">&quot;kskuangshao&quot;</span>git<span class="hljs-built_in"> config </span>--global user.email <span class="hljs-string">&quot;cocoacm_liyiming@163.com&quot;</span></code></pre><h5 id="个人的环境变量配置创建仓库"><a href="#个人的环境变量配置创建仓库" class="headerlink" title="个人的环境变量配置创建仓库"></a>个人的环境变量配置创建仓库</h5><pre><code class="hljs awk">https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/kskuangshao/</span>kskuangshao.github.io 这里一样  这里一样</code></pre><h5 id="安装deployer"><a href="#安装deployer" class="headerlink" title="安装deployer"></a>安装deployer</h5><pre><code class="hljs sql">npm <span class="hljs-keyword">install</span> hexo-deployer-git <span class="hljs-comment">--save</span></code></pre><h5 id="config-yml配置"><a href="#config-yml配置" class="headerlink" title="_config.yml配置"></a>_config.yml配置</h5><pre><code class="hljs less"><span class="hljs-attribute">deploy</span>:   <span class="hljs-attribute">type</span>: git   <span class="hljs-attribute">repo</span>: git<span class="hljs-variable">@github</span>.<span class="hljs-attribute">com</span>:kskuangshao/kskuangshao.github.io.git   <span class="hljs-attribute">branch</span>: master</code></pre><p><u>我觉得最大的坑就是配置文件，必须严格按照那特定的格式，可是官方文档也没特别提醒，必须是这个格式，type，repo，branch前两个空格，“：”后面一个空格，差一个都不行的：deploy:  type: git  repository: url  branch: master</u></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>hexo</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2020/10/17/hello-world/"/>
+    <url>/2020/10/17/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="hljs bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="hljs bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="hljs bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  
+</search>
