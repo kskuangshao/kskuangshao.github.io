@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="ks de blog">
+  <meta name="author" content="kuangshao">
+  <meta name="keywords" content="">
+  <title>hive数据类型、语法、分区表等概念 - Kskuangshao</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>狂少的BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/picture/back.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-26 00:34" pubdate>
+        2020年10月26日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">hive数据类型、语法、分区表等概念</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><table>
+<thead>
+<tr>
+<th>Hive数据类型</th>
+<th>java数据类型</th>
+<th>长度</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TinyInt</td>
+<td>byte</td>
+<td>1byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>SmallInt</td>
+<td>short</td>
+<td>2byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Int</td>
+<td>int</td>
+<td>4byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>BigInt</td>
+<td>long</td>
+<td>8byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>boolean</td>
+<td>布尔类型</td>
+<td>true，false</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>float</td>
+<td>单精度浮点数</td>
+<td>3.14159</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>double</td>
+<td>双精度浮点数</td>
+<td>3.14159</td>
+</tr>
+<tr>
+<td>String</td>
+<td>string</td>
+<td>字符</td>
+<td>‘now is time’</td>
+</tr>
+<tr>
+<td>Timestamp</td>
+<td></td>
+<td>时间类型</td>
+<td></td>
+</tr>
+<tr>
+<td>binary</td>
+<td></td>
+<td>字节数组</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>hive中的string相当于数据库的varchar，理论上能存2G的字符串</li>
+<li>小转大，不能大转小</li>
+<li>string、float可以隐式转换成double</li>
+<li>tinyint、smallint、int可以转换为float</li>
+<li>boolean类型不能转换为其他类型</li>
+<li>强制类型转换，可以使用CAST(1 AS INT)把字符串’1’转换成整数1，㘝强制类型转换失败，返回NULL</li>
+</ul>
+<h1 id="DDL数据定义"><a href="#DDL数据定义" class="headerlink" title="DDL数据定义"></a>DDL数据定义</h1><h2 id="库的增删改查"><a href="#库的增删改查" class="headerlink" title="库的增删改查"></a>库的增删改查</h2><h3 id="1-创建数据库"><a href="#1-创建数据库" class="headerlink" title="1. 创建数据库"></a>1. 创建数据库</h3><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span> mydb;</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> mydb location <span class="hljs-string">&#x27;/db_hive2.db&#x27;</span>;</code></pre>
+
+<h3 id="2-删除数据库"><a href="#2-删除数据库" class="headerlink" title="2. 删除数据库"></a>2. 删除数据库</h3><pre><code class="hljs sql"><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">exists</span> mydb;</code></pre>
+
+<ul>
+<li>删除不为空的database</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">drop</span> <span class="hljs-keyword">database</span> mydb <span class="hljs-keyword">cascade</span>;</code></pre>
+
+<h3 id="3-查看数据库"><a href="#3-查看数据库" class="headerlink" title="3. 查看数据库"></a>3. 查看数据库</h3><ul>
+<li>模糊查询</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">databases</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;db_hive*&#x27;</span>;</code></pre>
+
+<ul>
+<li>查看数据库详细信息</li>
+</ul>
+<pre><code class="hljs pgsql"><span class="hljs-keyword">desc</span> <span class="hljs-keyword">database</span> extended db_hive;</code></pre>
+
+<h3 id="4-修改数据库"><a href="#4-修改数据库" class="headerlink" title="4. 修改数据库"></a>4. 修改数据库</h3><ul>
+<li>注意：元数据信息不能更改（数据库名，数据库所在位置）</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">database</span> db_hive <span class="hljs-keyword">set</span> dbproperties(<span class="hljs-string">&#x27;createtime&#x27;</span>=<span class="hljs-string">&#x27;20200808&#x27;</span>)</code></pre>
+
+<h2 id="表的增删改查"><a href="#表的增删改查" class="headerlink" title="表的增删改查"></a>表的增删改查</h2><h3 id="1-建表语句"><a href="#1-建表语句" class="headerlink" title="1. 建表语句"></a>1. 建表语句</h3><ul>
+<li>分区分的是文件夹，分桶分的是文件（对应partitioned by、clustered by）</li>
+<li>‘[ ]’表示可选，’|’表示二选一</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> [<span class="hljs-keyword">TEMPORARY</span>] [<span class="hljs-keyword">EXTERNAL</span>] <span class="hljs-keyword">TABLE</span> [<span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span>] [db_name.]table_name
+  [(col_name data_type [<span class="hljs-keyword">COMMENT</span> col_comment], ... [constraint_specification])]
+  [<span class="hljs-keyword">COMMENT</span> table_comment]
+  [PARTITIONED <span class="hljs-keyword">BY</span> (col_name data_type [<span class="hljs-keyword">COMMENT</span> col_comment], ...)]
+  [CLUSTERED <span class="hljs-keyword">BY</span> (col_name, col_name, ...) [SORTED <span class="hljs-keyword">BY</span> (col_name [<span class="hljs-keyword">ASC</span>|<span class="hljs-keyword">DESC</span>], ...)] <span class="hljs-keyword">INTO</span> num_buckets BUCKETS]
+  [SKEWED <span class="hljs-keyword">BY</span> (col_name, col_name, ...)
+     <span class="hljs-keyword">ON</span> ((col_value, col_value, ...), (col_value, col_value, ...), ...)
+     [<span class="hljs-keyword">STORED</span> <span class="hljs-keyword">AS</span> DIRECTORIES]
+  [
+   [<span class="hljs-keyword">ROW</span> <span class="hljs-keyword">FORMAT</span> row_format] 
+   [<span class="hljs-keyword">STORED</span> <span class="hljs-keyword">AS</span> file_format]
+     | <span class="hljs-keyword">STORED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;storage.handler.class.name&#x27;</span> [<span class="hljs-keyword">WITH</span> SERDEPROPERTIES (...)]
+  ]
+  [LOCATION hdfs_path]</code></pre>
+
+
+
+<pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> [<span class="hljs-keyword">TEMPORARY</span>] [<span class="hljs-keyword">EXTERNAL</span>] <span class="hljs-keyword">TABLE</span> [<span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span>] [db_name.]table_name    <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> TEMPORARY available in Hive 0.14.0 and later)</span>
+  [(col_name data_type [<span class="hljs-keyword">COMMENT</span> col_comment], ... [constraint_specification])]
+  [<span class="hljs-keyword">COMMENT</span> table_comment]
+  [PARTITIONED <span class="hljs-keyword">BY</span> (col_name data_type [<span class="hljs-keyword">COMMENT</span> col_comment], ...)]
+  [CLUSTERED <span class="hljs-keyword">BY</span> (col_name, col_name, ...) [SORTED <span class="hljs-keyword">BY</span> (col_name [<span class="hljs-keyword">ASC</span>|<span class="hljs-keyword">DESC</span>], ...)] <span class="hljs-keyword">INTO</span> num_buckets BUCKETS]
+  [SKEWED <span class="hljs-keyword">BY</span> (col_name, col_name, ...)                  <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.10.0 and later)]</span>
+     <span class="hljs-keyword">ON</span> ((col_value, col_value, ...), (col_value, col_value, ...), ...)
+     [<span class="hljs-keyword">STORED</span> <span class="hljs-keyword">AS</span> DIRECTORIES]
+  [
+   [<span class="hljs-keyword">ROW</span> <span class="hljs-keyword">FORMAT</span> row_format] 
+   [<span class="hljs-keyword">STORED</span> <span class="hljs-keyword">AS</span> file_format]
+     | <span class="hljs-keyword">STORED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;storage.handler.class.name&#x27;</span> [<span class="hljs-keyword">WITH</span> SERDEPROPERTIES (...)]  <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.6.0 and later)</span>
+  ]
+  [LOCATION hdfs_path]
+  [TBLPROPERTIES (property_name=property_value, ...)]   <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.6.0 and later)</span>
+ 
+ 
+ 
+[<span class="hljs-keyword">AS</span> select_statement];   <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.5.0 and later; not supported for external tables)</span>
+ 
+ 
+ 
+<span class="hljs-keyword">CREATE</span> [<span class="hljs-keyword">TEMPORARY</span>] [<span class="hljs-keyword">EXTERNAL</span>] <span class="hljs-keyword">TABLE</span> [<span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span>] [db_name.]table_name
+  <span class="hljs-keyword">LIKE</span> existing_table_or_view_name
+  [LOCATION hdfs_path];
+ 
+data_type
+  : primitive_type
+  | array_type
+  | map_type
+  | struct_type
+  | union_type  <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.7.0 and later)</span>
+ 
+primitive_type
+  : TINYINT
+  | SMALLINT
+  | INT
+  | BIGINT
+  | BOOLEAN
+  | FLOAT
+  | DOUBLE
+  | DOUBLE PRECISION <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 2.2.0 and later)</span>
+  | STRING
+  | BINARY      <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.8.0 and later)</span>
+  | TIMESTAMP   <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.8.0 and later)</span>
+  | DECIMAL     <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.11.0 and later)</span>
+  | DECIMAL(precision, scale)  <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.13.0 and later)</span>
+  | DATE        <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.12.0 and later)</span>
+  | VARCHAR     <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.12.0 and later)</span>
+  | CHAR        <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.13.0 and later)</span>
+ 
+array_type
+  : ARRAY &lt; data_type &gt;
+ 
+map_type
+  : MAP &lt; primitive_type, data_type &gt;
+ 
+struct_type
+  : STRUCT &lt; col_name : data_type [COMMENT col_comment], ...&gt;
+ 
+union_type
+   : UNIONTYPE &lt; data_type, data_type, ... &gt;  -- (Note: Available in Hive 0.7.0 and later)
+ 
+row_format
+  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]
+        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]
+        [NULL DEFINED AS char]   <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.13 and later)</span>
+  | SERDE serde_name [<span class="hljs-keyword">WITH</span> SERDEPROPERTIES (property_name=property_value, property_name=property_value, ...)]
+ 
+file_format:
+  : SEQUENCEFILE
+  | TEXTFILE    <span class="hljs-comment">-- (Default, depending on hive.default.fileformat configuration)</span>
+  | RCFILE      <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.6.0 and later)</span>
+  | ORC         <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.11.0 and later)</span>
+  | PARQUET     <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.13.0 and later)</span>
+  | AVRO        <span class="hljs-comment">-- (<span class="hljs-doctag">Note:</span> Available in Hive 0.14.0 and later)</span>
+  | INPUTFORMAT input_format_classname OUTPUTFORMAT output_format_classname
+ 
+constraint_specification:
+  : [, PRIMARY <span class="hljs-keyword">KEY</span> (col_name, ...) <span class="hljs-keyword">DISABLE</span> <span class="hljs-keyword">NOVALIDATE</span> ]
+    [, <span class="hljs-keyword">CONSTRAINT</span> constraint_name <span class="hljs-keyword">FOREIGN</span> <span class="hljs-keyword">KEY</span> (col_name, ...) <span class="hljs-keyword">REFERENCES</span> table_name(col_name, ...) <span class="hljs-keyword">DISABLE</span> <span class="hljs-keyword">NOVALIDATE</span></code></pre>
+
+<h3 id="2-修改表"><a href="#2-修改表" class="headerlink" title="2. 修改表"></a>2. 修改表</h3><ul>
+<li>重命名表</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">rename</span> <span class="hljs-keyword">to</span> student;</code></pre>
+
+<ul>
+<li>增删改分区</li>
+</ul>
+<p>见如下分区表</p>
+<ul>
+<li>增加、修改、替换列信息</li>
+</ul>
+<h2 id="内部表和外部表区别"><a href="#内部表和外部表区别" class="headerlink" title="内部表和外部表区别"></a>内部表和外部表区别</h2><ol>
+<li>删除表内部表的元数据也会删除，外部表则不会</li>
+<li>建表语句不同，外部表有external关键字</li>
+</ol>
+<ul>
+<li><p>内部表也叫管理表</p>
+</li>
+<li><p>内部表转外部表（大写！）</p>
+</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student2 <span class="hljs-keyword">set</span> tblproperties(<span class="hljs-string">&#x27;EXTERNAL&#x27;</span>=<span class="hljs-string">&#x27;TURE&#x27;</span>);</code></pre>
+
+<ul>
+<li>然后查询一下</li>
+</ul>
+<pre><code class="hljs sql">desc formatted student2;</code></pre>
+
+
+
+<h2 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h2><p>hive的分区表就是分目录，把一个大的数据集根据业务需要分割成小的数据集，在查询的时候通过WHERE子句中的表达选择所需要的的指定分区，这样查询效率高。谓词下推</p>
+<ul>
+<li>谓词下推：先过滤成小数据集，再查询，效率高。</li>
+<li>分区字段也是表中的一个字段，只不过比较特殊。（不能使用表属性名作为分区字段名，自行体会）</li>
+</ul>
+<h3 id="一级分区"><a href="#一级分区" class="headerlink" title="一级分区"></a>一级分区</h3><ol>
+<li>增加分区</li>
+</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student <span class="hljs-keyword">add</span> <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;202008&#x27;</span>) <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;202009&#x27;</span>);</code></pre>
+
+<ol start="2">
+<li>删除分区</li>
+</ol>
+<ul>
+<li>注意这里是’ , ‘</li>
+</ul>
+<pre><code class="hljs sql">alte table student <span class="hljs-keyword">drop</span> <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;202008&#x27;</span>) ,<span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;202009&#x27;</span>);</code></pre>
+
+<ol start="3">
+<li>查看分区表有多少个分区</li>
+</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">partitions</span> student;</code></pre>
+
+<ol start="4">
+<li>查看分区表的结构</li>
+</ol>
+<pre><code class="hljs sql">desc formatted student;</code></pre>
+
+<h3 id="二级分区"><a href="#二级分区" class="headerlink" title="二级分区"></a>二级分区</h3><ol>
+<li>建表</li>
+</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> student2(<span class="hljs-keyword">id</span> <span class="hljs-built_in">int</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>) partitioned <span class="hljs-keyword">by</span> (<span class="hljs-keyword">month</span> <span class="hljs-keyword">string</span>,<span class="hljs-keyword">day</span> <span class="hljs-keyword">string</span>) <span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span>;</code></pre>
+
+<ol start="2">
+<li>导入本地数据</li>
+</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">load</span> <span class="hljs-keyword">data</span> <span class="hljs-keyword">local</span> inpath <span class="hljs-string">&#x27;/home/hadoop/data/student2.txt&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> student2 <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;2019-07&#x27;</span>,<span class="hljs-keyword">day</span>=<span class="hljs-string">&#x27;01&#x27;</span>);</code></pre>
+
+<ol start="3">
+<li>查询</li>
+</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student2 <span class="hljs-keyword">where</span> <span class="hljs-keyword">month</span> = <span class="hljs-string">&#x27;2019-07&#x27;</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">day</span> = <span class="hljs-string">&#x27;01&#x27;</span>;</code></pre>
+
+<pre><code> 4. 如果手动创建了一个分区文件夹，并上传文件，是不能直接查分区的，需要修复或者添加分区</code></pre>
+<ul>
+<li>修复指令（很多分区都没有添加）</li>
+</ul>
+<pre><code class="hljs sql">msck <span class="hljs-keyword">repair</span> <span class="hljs-keyword">table</span> student2;</code></pre>
+
+<ul>
+<li>添加分区（推荐）</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student2 <span class="hljs-keyword">add</span> <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span> = <span class="hljs-string">&#x27;2019-11&#x27;</span>,<span class="hljs-keyword">day</span> = <span class="hljs-string">&#x27;01&#x27;</span>)</code></pre>
+
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hive/">hive</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/18/hexo/">
+                        <span class="hidden-mobile">hexo的安装以及常用命令</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "hive数据类型、语法、分区表等概念&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
