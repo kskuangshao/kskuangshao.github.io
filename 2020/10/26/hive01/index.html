@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.4k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      19
+      21
        分钟
     </span>
   
@@ -439,6 +439,15 @@ constraint_specification:
 <ul>
 <li>增加、修改、替换列信息</li>
 </ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">add</span> <span class="hljs-keyword">columns</span>(<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>);</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">change</span> <span class="hljs-keyword">column</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">names</span> <span class="hljs-keyword">string</span>;</code></pre>
+
+<pre><code class="hljs sql">替换所有列
+<span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">replace</span> <span class="hljs-keyword">columns</span>(did <span class="hljs-built_in">int</span>);</code></pre>
+
+
+
 <h2 id="内部表和外部表区别"><a href="#内部表和外部表区别" class="headerlink" title="内部表和外部表区别"></a>内部表和外部表区别</h2><ol>
 <li>删除表内部表的元数据也会删除，外部表则不会</li>
 <li>建表语句不同，外部表有external关键字</li>
@@ -512,7 +521,22 @@ constraint_specification:
 </ul>
 <pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student2 <span class="hljs-keyword">add</span> <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span> = <span class="hljs-string">&#x27;2019-11&#x27;</span>,<span class="hljs-keyword">day</span> = <span class="hljs-string">&#x27;01&#x27;</span>)</code></pre>
 
+<h1 id="DML数据操作"><a href="#DML数据操作" class="headerlink" title="DML数据操作"></a>DML数据操作</h1><h2 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h2><h3 id="1-向表中装载数据"><a href="#1-向表中装载数据" class="headerlink" title="1. 向表中装载数据"></a>1. 向表中装载数据</h3><pre><code class="hljs sql"><span class="hljs-keyword">load</span> <span class="hljs-keyword">data</span> [<span class="hljs-keyword">local</span>] inpath <span class="hljs-string">&#x27;xxx/xxx/xxx.txt&#x27;</span> overwrite|<span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> student [<span class="hljs-keyword">partition</span>(<span class="hljs-keyword">day</span>=<span class="hljs-string">&#x27;01&#x27;</span>,<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;201708&#x27;</span>]</code></pre>
 
+<ul>
+<li>local：本地或者hdfs</li>
+</ul>
+<h3 id="2-插入数据"><a href="#2-插入数据" class="headerlink" title="2. 插入数据"></a>2. 插入数据</h3><ul>
+<li>基本插入</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> student <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;201702&#x27;</span>) <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;ks&#x27;</span>)</code></pre>
+
+<ul>
+<li>覆盖插入</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">table</span> student <span class="hljs-keyword">partition</span>(<span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;20170208&#x27;</span>) <span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> <span class="hljs-keyword">month</span>=<span class="hljs-string">&#x27;201702&#x27;</span></code></pre>
+
+<h3 id="3-创建表并加载数据"><a href="#3-创建表并加载数据" class="headerlink" title="3.创建表并加载数据"></a>3.创建表并加载数据</h3><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span> student <span class="hljs-keyword">as</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> student</code></pre>
 
 
             </div>
@@ -536,6 +560,12 @@ constraint_specification:
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/10/28/sql01/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">sql函数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
