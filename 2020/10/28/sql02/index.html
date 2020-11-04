@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      110 字
+      217 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      3
        分钟
     </span>
   
@@ -245,6 +245,26 @@ b <span class="hljs-keyword">as</span> (<span class="hljs-keyword">select</span>
 <span class="hljs-keyword">select</span> a.id,a.name,b.age <span class="hljs-keyword">from</span> a
 <span class="hljs-keyword">inner</span> <span class="hljs-keyword">join</span>
 b <span class="hljs-keyword">on</span> a.id=b.id;</code></pre>
+
+<h2 id="元数据-和-建表语句-分开"><a href="#元数据-和-建表语句-分开" class="headerlink" title="元数据 和 建表语句 分开"></a>元数据 和 建表语句 分开</h2><h3 id="方式一（hdfs）"><a href="#方式一（hdfs）" class="headerlink" title="方式一（hdfs）"></a>方式一（hdfs）</h3><ul>
+<li>元数据test.txt上传hdfs</li>
+</ul>
+<pre><code class="hljs awk">hdfs dfs -put test.txt <span class="hljs-regexp">/hive/</span>test/</code></pre>
+
+<ul>
+<li>建表指定位置</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> player4(<span class="hljs-keyword">id</span> <span class="hljs-built_in">int</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>) <span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span> location <span class="hljs-string">&#x27;/hive/test&#x27;</span>;</code></pre>
+
+<h3 id="方式二（load方式，本地、hdfs）"><a href="#方式二（load方式，本地、hdfs）" class="headerlink" title="方式二（load方式，本地、hdfs）"></a>方式二（load方式，本地、hdfs）</h3><ul>
+<li>建表</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> player4(<span class="hljs-keyword">id</span> <span class="hljs-built_in">int</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>) <span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span></code></pre>
+
+<ul>
+<li>元数据load到表中(“[ ]”代表可选)</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">load</span> <span class="hljs-keyword">data</span> [<span class="hljs-keyword">local</span>] inpath <span class="hljs-string">&#x27;/home/hadoop/data/test.txt&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> player4</code></pre>
 
 
             </div>
