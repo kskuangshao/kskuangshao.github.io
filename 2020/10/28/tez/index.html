@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>sql函数 - Kskuangshao</title>
+  <title>tez - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,7 +165,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-28 22:20" pubdate>
+      <time datetime="2020-10-28 23:45" pubdate>
         2020年10月28日 晚上
       </time>
     </span>
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      229 字
+      147 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      1
        分钟
     </span>
   
@@ -217,77 +217,39 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">sql函数</h1>
+            <h1 style="display: none">tez</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="总结常用sql函数"><a href="#总结常用sql函数" class="headerlink" title="总结常用sql函数"></a>总结常用sql函数</h1><h2 id="1-unix-timestamp-amp-from-unixtime"><a href="#1-unix-timestamp-amp-from-unixtime" class="headerlink" title="1.unix_timestamp &amp; from_unixtime()"></a>1.unix_timestamp &amp; from_unixtime()</h2><ul>
-<li>unix_timestamp</li>
-</ul>
-<pre><code class="hljs sql">spark-sql&gt; select unix_timestamp(&#x27;2018-12-05 01:10:00&#x27;,&#x27;yyyy-MM-dd HH:mm:ss&#x27;);
+              <h1 id="tez官网"><a href="#tez官网" class="headerlink" title="tez官网"></a>tez官网</h1><pre><code class="hljs sql">http://tez.apache.org/</code></pre>
 
-1543943400</code></pre>
-
- <pre><code class="hljs sql">spark-sql&gt; select unix_timestamp(&#x27;2018-12-05&#x27;,&#x27;yyyy-MM-dd&#x27;);
-
-1543939200</code></pre>
-
+<h1 id="什么是Tez？"><a href="#什么是Tez？" class="headerlink" title="什么是Tez？"></a>什么是Tez？</h1><p>tez是一个基于内存的计算引擎，通过允许像 Apache Hive 和 Apache Pig 这样的项目运行复杂的 DAG 任务，Tez 可用于处理数据。</p>
 <ul>
-<li>from_unixtime()</li>
+<li>优点：快，节点少</li>
+<li>缺点：对内存要求高</li>
 </ul>
-<pre><code class="hljs sql">spark-sql&gt; select from_unixtime(1543943400,&#x27;yyyy-MM-dd&#x27;);
+<h1 id="Tez安装部署"><a href="#Tez安装部署" class="headerlink" title="Tez安装部署"></a>Tez安装部署</h1><ol>
+<li>查看官网选择和hadoop匹配的tez版本</li>
+</ol>
+<pre><code class="hljs applescript">hadoop <span class="hljs-built_in">version</span></code></pre>
 
-2018-12-05</code></pre>
+<ol start="2">
+<li>下载</li>
+</ol>
+<pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>www.apache.org<span class="hljs-regexp">/dyn/</span>closer.lua<span class="hljs-regexp">/tez/</span><span class="hljs-number">0.8</span>.<span class="hljs-number">5</span>/</code></pre>
 
-<h2 id="2-cast-name-as-string-类型转换"><a href="#2-cast-name-as-string-类型转换" class="headerlink" title="2. cast(name as string) 类型转换"></a>2. cast(name as string) 类型转换</h2><ul>
-<li>cnt int –&gt; cnt string</li>
-</ul>
-<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">cast</span>(cnt <span class="hljs-keyword">as</span> <span class="hljs-keyword">string</span>) <span class="hljs-keyword">from</span> player;</code></pre>
-
-<h2 id="3-if-name-’ks’-x-y"><a href="#3-if-name-’ks’-x-y" class="headerlink" title="3. if(name=’ks’,x,y)"></a>3. if(name=’ks’,x,y)</h2><ul>
-<li>如果name字段是ks，返回x，否则返回y</li>
-</ul>
-<h2 id="4-hive中map类型的字段使用"><a href="#4-hive中map类型的字段使用" class="headerlink" title="4. hive中map类型的字段使用"></a>4. hive中map类型的字段使用</h2><ul>
-<li>创建表</li>
-<li>注意集合，key的分隔符</li>
-</ul>
-<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> player_info (groupname <span class="hljs-keyword">string</span>,info <span class="hljs-keyword">map</span>&lt;<span class="hljs-keyword">string</span>,<span class="hljs-keyword">string</span>&gt;)
-<span class="hljs-keyword">ROW</span> <span class="hljs-keyword">FORMAT</span> <span class="hljs-keyword">DELIMITED</span>                                          
-<span class="hljs-keyword">FIELDS</span> <span class="hljs-keyword">TERMINATED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;\t&#x27;</span>                                
-COLLECTION ITEMS <span class="hljs-keyword">TERMINATED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;,&#x27;</span>                       
-<span class="hljs-keyword">MAP</span> <span class="hljs-keyword">KEYS</span> <span class="hljs-keyword">TERMINATED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;:&#x27;</span>;</code></pre>
-
+<ol start="3">
+<li>解压</li>
+</ol>
 <ul>
-<li>文本数据准备</li>
-<li>player_info.txt</li>
+<li>注意：解压到hive的节点上</li>
 </ul>
-<pre><code class="hljs css"><span class="hljs-selector-tag">win_team</span>	<span class="hljs-selector-tag">name</span><span class="hljs-selector-pseudo">:ks</span>,<span class="hljs-selector-tag">age</span><span class="hljs-selector-pseudo">:18</span>,<span class="hljs-selector-tag">position</span><span class="hljs-selector-pseudo">:carry</span>
-<span class="hljs-selector-tag">win_team</span>	<span class="hljs-selector-tag">name</span><span class="hljs-selector-pseudo">:ajshon</span>,<span class="hljs-selector-tag">age</span><span class="hljs-selector-pseudo">:19</span>,<span class="hljs-selector-tag">position</span><span class="hljs-selector-pseudo">:mid</span>
-<span class="hljs-selector-tag">lose_team</span>	<span class="hljs-selector-tag">name</span><span class="hljs-selector-pseudo">:rain</span>,<span class="hljs-selector-tag">age</span><span class="hljs-selector-pseudo">:28</span>,<span class="hljs-selector-tag">position</span><span class="hljs-selector-pseudo">:top</span></code></pre>
-
+<ol start="4">
+<li>下载的tez包（ apache-tez-0.8.5-bin.tar.gz） 上传到hdfs上</li>
+</ol>
 <ul>
-<li>导入数据到表</li>
+<li>除了hive节点，其他节点也需要tez计算</li>
 </ul>
-<pre><code class="hljs sql"><span class="hljs-keyword">load</span> <span class="hljs-keyword">data</span> <span class="hljs-keyword">local</span> inpath <span class="hljs-string">&#x27;/home/hadoop/data/player_info.txt&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> player_info;</code></pre>
-
-<ul>
-<li>查询</li>
-</ul>
-<pre><code class="hljs sql"><span class="hljs-keyword">select</span> info[<span class="hljs-string">&#x27;name&#x27;</span>] <span class="hljs-keyword">from</span> player_info;</code></pre>
-
-<ul>
-<li>结果</li>
-</ul>
-<pre><code class="hljs apache"><span class="hljs-attribute">Driver</span>.java:<span class="hljs-number">376</span>, took <span class="hljs-number">0</span>.<span class="hljs-number">719682</span> s
-<span class="hljs-attribute">ks</span>
-<span class="hljs-attribute">ajshon</span>
-<span class="hljs-attribute">rain</span></code></pre>
-
-
-
-
-
-
-
+<p>5. </p>
 
             </div>
             <hr>
@@ -298,7 +260,7 @@ COLLECTION ITEMS <span class="hljs-keyword">TERMINATED</span> <span class="hljs-
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/sql/">sql</a>
+                      <a class="hover-with-bg" href="/tags/hive-tez/">hive tez</a>
                     
                   </div>
                 
@@ -311,18 +273,12 @@ COLLECTION ITEMS <span class="hljs-keyword">TERMINATED</span> <span class="hljs-
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/28/tez/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">tez</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/28/sql02/">
-                        <span class="hidden-mobile">sql语句</span>
+                      <a href="/2020/10/28/sql01/">
+                        <span class="hidden-mobile">sql函数</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -458,7 +414,7 @@ COLLECTION ITEMS <span class="hljs-keyword">TERMINATED</span> <span class="hljs-
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "sql函数&nbsp;",
+        "tez&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
