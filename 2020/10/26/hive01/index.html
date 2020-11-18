@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.6k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      24
        分钟
     </span>
   
@@ -327,7 +327,12 @@
 <h2 id="表的增删改查"><a href="#表的增删改查" class="headerlink" title="表的增删改查"></a>表的增删改查</h2><h3 id="1-建表语句"><a href="#1-建表语句" class="headerlink" title="1. 建表语句"></a>1. 建表语句</h3><ul>
 <li>分区分的是文件夹，分桶分的是文件（对应partitioned by、clustered by）</li>
 <li>‘[ ]’表示可选，’|’表示二选一</li>
+<li>指定分隔符</li>
 </ul>
+<pre><code class="hljs sql">row format delimited fields terminated by &#x27;/t&#x27;</code></pre>
+
+
+
 <pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> [<span class="hljs-keyword">TEMPORARY</span>] [<span class="hljs-keyword">EXTERNAL</span>] <span class="hljs-keyword">TABLE</span> [<span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span>] [db_name.]table_name
   [(col_name data_type [<span class="hljs-keyword">COMMENT</span> col_comment], ... [constraint_specification])]
   [<span class="hljs-keyword">COMMENT</span> table_comment]
@@ -443,7 +448,7 @@ constraint_specification:
 
 <pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">change</span> <span class="hljs-keyword">column</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">names</span> <span class="hljs-keyword">string</span>;</code></pre>
 
-<pre><code class="hljs sql">替换所有列
+<pre><code class="hljs sql"><span class="hljs-comment">--替换所有列</span>
 <span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> student4 <span class="hljs-keyword">replace</span> <span class="hljs-keyword">columns</span>(did <span class="hljs-built_in">int</span>);</code></pre>
 
 
@@ -538,7 +543,28 @@ constraint_specification:
 
 <h3 id="3-创建表并加载数据"><a href="#3-创建表并加载数据" class="headerlink" title="3.创建表并加载数据"></a>3.创建表并加载数据</h3><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span> student <span class="hljs-keyword">as</span> <span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> student</code></pre>
 
+<h3 id="3-导出数据"><a href="#3-导出数据" class="headerlink" title="3.导出数据"></a>3.导出数据</h3><h4 id="insert导出"><a href="#insert导出" class="headerlink" title="insert导出"></a>insert导出</h4><h5 id="1-将结果导出到本地"><a href="#1-将结果导出到本地" class="headerlink" title="1.将结果导出到本地"></a>1.将结果导出到本地</h5><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">local</span> <span class="hljs-keyword">directory</span> <span class="hljs-string">&#x27;/opt/module/datas/export/student&#x27;</span> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student;</code></pre>
 
+<h5 id="2-将查询结果格式化导出到本地-hdfs上"><a href="#2-将查询结果格式化导出到本地-hdfs上" class="headerlink" title="2. 将查询结果格式化导出到本地/hdfs上"></a>2. 将查询结果格式化导出到本地/hdfs上</h5><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite [<span class="hljs-keyword">local</span>] <span class="hljs-keyword">directory</span> <span class="hljs-string">&#x27;/opt/module/datas/export/student1&#x27;</span> <span class="hljs-keyword">ROW</span> <span class="hljs-keyword">FORMAT</span> <span class="hljs-keyword">DELIMITED</span> <span class="hljs-keyword">FIELDS</span> <span class="hljs-keyword">TERMINATED</span> <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;\t&#x27;</span> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student;</code></pre>
+
+<h4 id="hadoop导出"><a href="#hadoop导出" class="headerlink" title="hadoop导出"></a>hadoop导出</h4><pre><code class="hljs shell">hdfs dfs -get /user/hive/warehouse/student/month=20201125 /opt/module/datas/export/student3.txt</code></pre>
+
+<ul>
+<li>导出并合并</li>
+</ul>
+<pre><code class="hljs shell">hdfs dfs -getmerge /xxx /xxx/xxx.txt</code></pre>
+
+<h4 id="sqoop导出"><a href="#sqoop导出" class="headerlink" title="sqoop导出"></a>sqoop导出</h4><ul>
+<li>用于hive、mysql之间的导入导出</li>
+</ul>
+<h4 id="export导出"><a href="#export导出" class="headerlink" title="export导出"></a>export导出</h4><pre><code class="hljs shell">export table default.student to &#x27;/user/hive/warehouse/export/student&#x27;;</code></pre>
+
+<h3 id="4-清空表"><a href="#4-清空表" class="headerlink" title="4. 清空表"></a>4. 清空表</h3><ul>
+<li>注意：只能清空管理表，不能清空外部表</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">truncate</span> <span class="hljs-keyword">table</span> default.student;</code></pre>
+
+<h3 id="5-查询"><a href="#5-查询" class="headerlink" title="5. 查询"></a>5. 查询</h3>
             </div>
             <hr>
             <div>

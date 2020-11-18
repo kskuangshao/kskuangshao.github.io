@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>tez - Kskuangshao</title>
+  <title>hive02 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-28 23:45" pubdate>
-        2020年10月28日 晚上
+      <time datetime="2020-11-19 01:01" pubdate>
+        2020年11月19日 凌晨
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      147 字
+      349 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      5
        分钟
     </span>
   
@@ -217,39 +217,68 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">tez</h1>
+            <h1 style="display: none">hive02</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="tez官网"><a href="#tez官网" class="headerlink" title="tez官网"></a>tez官网</h1><pre><code class="hljs sql">http://tez.apache.org/</code></pre>
+              <h1 id="符合分割符的一种解决方案"><a href="#符合分割符的一种解决方案" class="headerlink" title="符合分割符的一种解决方案"></a>符合分割符的一种解决方案</h1><h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><h2 id="DDL数据库定义语言"><a href="#DDL数据库定义语言" class="headerlink" title="DDL数据库定义语言"></a>DDL数据库定义语言</h2><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span>、<span class="hljs-keyword">ALTER</span>、<span class="hljs-keyword">DROP</span>、<span class="hljs-keyword">TRUNCATE</span>、<span class="hljs-keyword">COMMENT</span>、<span class="hljs-keyword">RENAME</span></code></pre>
 
-<h1 id="什么是Tez？"><a href="#什么是Tez？" class="headerlink" title="什么是Tez？"></a>什么是Tez？</h1><p>tez是一个基于内存的计算引擎，通过允许像 Apache Hive 和 Apache Pig 这样的项目运行复杂的 DAG 任务，Tez 可用于处理数据。</p>
-<ul>
-<li>优点：快，节点少</li>
-<li>缺点：对内存要求高</li>
-</ul>
-<h1 id="Tez安装部署"><a href="#Tez安装部署" class="headerlink" title="Tez安装部署"></a>Tez安装部署</h1><ol>
-<li>查看官网选择和hadoop匹配的tez版本</li>
-</ol>
-<pre><code class="hljs applescript">hadoop <span class="hljs-built_in">version</span></code></pre>
+<h2 id="DML数据操纵语言"><a href="#DML数据操纵语言" class="headerlink" title="DML数据操纵语言"></a>DML数据操纵语言</h2><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>、<span class="hljs-keyword">INSERT</span>、<span class="hljs-keyword">UPDATE</span>、<span class="hljs-keyword">DELETE</span>、<span class="hljs-keyword">MERGE</span>、<span class="hljs-keyword">CALL</span>、<span class="hljs-keyword">EXPLAIN</span> PLAN
+<span class="hljs-keyword">LOCK</span> <span class="hljs-keyword">TABLE</span></code></pre>
 
-<ol start="2">
-<li>下载</li>
-</ol>
-<pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>www.apache.org<span class="hljs-regexp">/dyn/</span>closer.lua<span class="hljs-regexp">/tez/</span><span class="hljs-number">0.8</span>.<span class="hljs-number">5</span>/</code></pre>
+<h2 id="DCL数据库控制语言"><a href="#DCL数据库控制语言" class="headerlink" title="DCL数据库控制语言"></a>DCL数据库控制语言</h2><pre><code class="hljs sql"><span class="hljs-keyword">GRANT</span>、<span class="hljs-keyword">REVOKE</span></code></pre>
 
-<ol start="3">
-<li>解压</li>
-</ol>
-<ul>
-<li>注意：解压到hive的节点上</li>
+<h2 id="TCL事务控制语言"><a href="#TCL事务控制语言" class="headerlink" title="TCL事务控制语言"></a>TCL事务控制语言</h2><pre><code class="hljs sql"><span class="hljs-keyword">SAVEPOINT</span>设置保存点、<span class="hljs-keyword">ROLLBACK</span>回滚、<span class="hljs-keyword">SET</span> TRANSCATION</code></pre>
+
+
+
+<h1 id="DDL"><a href="#DDL" class="headerlink" title="DDL"></a>DDL</h1><h2 id="组合分隔符的解决方案"><a href="#组合分隔符的解决方案" class="headerlink" title="组合分隔符的解决方案"></a>组合分隔符的解决方案</h2><ul>
+<li>建表</li>
 </ul>
-<ol start="4">
-<li>下载的tez包（ apache-tez-0.8.5-bin.tar.gz） 上传到hdfs上</li>
-</ol>
+<pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> test0001(<span class="hljs-keyword">id</span> <span class="hljs-keyword">string</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>) <span class="hljs-keyword">ROW</span> <span class="hljs-keyword">FORMAT</span> SERDE <span class="hljs-string">&#x27;org.apache.hadoop.hive.contrib.serde2.MultiDelimitSerDe&#x27;</span> <span class="hljs-keyword">WITH</span> SERDEPROPERTIES (<span class="hljs-string">&quot;field.delim&quot;</span>=<span class="hljs-string">&quot;\&quot;</span>\;\&quot;&quot;);</code></pre>
+
 <ul>
-<li>除了hive节点，其他节点也需要tez计算</li>
+<li>添加jar包</li>
 </ul>
-<p>5. </p>
+<pre><code class="hljs sql">add jar /usr/local/hive/lib/hive-contrib-1.2.0.jar;</code></pre>
+
+<ul>
+<li>插入数据</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> test0001 <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;ks&#x27;</span>);</code></pre>
+
+<ul>
+<li>查询结果</li>
+</ul>
+<pre><code class="hljs shell">1&quot;;&quot;ks</code></pre>
+
+<h1 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h1><h2 id="输入数据并动态分区"><a href="#输入数据并动态分区" class="headerlink" title="输入数据并动态分区"></a>输入数据并动态分区</h2><pre><code class="hljs sql"><span class="hljs-comment">--案例：比方说一个订单表，按照品牌（pt_brand_x）分区</span>
+<span class="hljs-comment">--注意两点 partition(‘分区’) , 分区字段写到最后面</span>
+<span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">table</span> app.sbl_order <span class="hljs-keyword">partition</span>(pt_brand_x) 
+<span class="hljs-keyword">select</span> order_id,
+       order_price,
+       pt_biz_date,
+       pt_brand_x <span class="hljs-comment">--‘分区字段’</span>
+<span class="hljs-keyword">from</span> <span class="hljs-keyword">order</span>;</code></pre>
+
+<h2 id="常用的函数"><a href="#常用的函数" class="headerlink" title="常用的函数"></a>常用的函数</h2><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> pt_brand_x     <span class="hljs-keyword">AS</span> pt_brand_x,
+	 integration_id <span class="hljs-keyword">AS</span> integration_id,
+	 position_name  <span class="hljs-keyword">AS</span> position_name,
+	 row_wid        <span class="hljs-keyword">AS</span> row_wid,
+	 emp_last_name  <span class="hljs-keyword">AS</span> emp_last_name,
+	 <span class="hljs-keyword">CASE</span>
+		 <span class="hljs-comment">--position_name 长度小于10</span>
+		 <span class="hljs-keyword">WHEN</span> <span class="hljs-keyword">length</span>(position_name) &lt; <span class="hljs-number">10</span> <span class="hljs-keyword">THEN</span> position_name
+		 <span class="hljs-comment">--instr函数代替了like方式，返回字符串在字段中的位置，没有为0 </span>
+		 <span class="hljs-comment">--神经病，精神病，病 ,查 神 返回1 2 0 </span>
+		 <span class="hljs-comment">--也可以放到where里&gt;0查看字段里是否存在这个字</span>
+		 <span class="hljs-keyword">WHEN</span> <span class="hljs-keyword">instr</span>(<span class="hljs-keyword">upper</span>(position_name), <span class="hljs-string">&#x27;LANCOME&#x27;</span>) &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">THEN</span> position_name
+		 <span class="hljs-keyword">WHEN</span> position_name = <span class="hljs-string">&#x27;LAN_CN_Position&#x27;</span> <span class="hljs-keyword">THEN</span> position_name
+		 <span class="hljs-comment">--从第4个位置开始保留到最后</span>
+		 <span class="hljs-keyword">ELSE</span> <span class="hljs-keyword">substr</span>(position_name, <span class="hljs-number">4</span>)
+		 <span class="hljs-keyword">END</span>        <span class="hljs-keyword">AS</span> new_ba_code
+<span class="hljs-keyword">FROM</span> dws.mirror_dim_sbl_w_position_d
+<span class="hljs-keyword">WHERE</span> <span class="hljs-number">1</span> = <span class="hljs-number">1</span>;</code></pre>
+
 
             </div>
             <hr>
@@ -260,7 +289,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/hive-tez/">hive tez</a>
+                      <a class="hover-with-bg" href="/tags/hive-%E7%94%9F%E4%BA%A7/">hive 生产</a>
                     
                   </div>
                 
@@ -273,9 +302,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/14/JVM%E6%8E%A2%E7%A9%B6/">
+                      <a href="/2020/11/19/jvm01/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
+                        <span class="hidden-mobile">jvm虚拟机探究</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -283,8 +312,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/28/sql01/">
-                        <span class="hidden-mobile">sql函数</span>
+                      <a href="/2020/11/14/JVM%E6%8E%A2%E7%A9%B6/">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -420,7 +449,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "tez&nbsp;",
+        "hive02&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
