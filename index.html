@@ -340,31 +340,23 @@ http://www.ap
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/10/28/sql02/">sql语句</a>
+        <a href="/2020/10/28/sql01/">sql函数</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/10/28/sql02/">
+        <a href="/2020/10/28/sql01/">
           
           
             
           
-          总结常用sql语句建表语句
+          总结常用sql函数1.unix_timestamp &amp; from_unixtime()
+unix_timestamp
 
-多表结构相同
+spark-sql&gt; select unix_timestamp(&#x27;2018-12-05 01:10:00&#x27;,&#x27;yyyy-MM-dd HH:mm:ss&#x27;);
 
-create table tables as
-select id,name from player1
-union all
-select id,name from player2;
+1543943400
 
-
-多表结构不相同
-
-create table tables2
-as with
-a as (select id,name from player1),
-b as (selec
+ spark-sql&gt; select
         </a>
       </p>
 
@@ -396,23 +388,31 @@ b as (selec
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/10/28/sql01/">sql函数</a>
+        <a href="/2020/10/28/sql02/">sql语句</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/10/28/sql01/">
+        <a href="/2020/10/28/sql02/">
           
           
             
           
-          总结常用sql函数1.unix_timestamp &amp; from_unixtime()
-unix_timestamp
+          总结常用sql语句建表语句
 
-spark-sql&gt; select unix_timestamp(&#x27;2018-12-05 01:10:00&#x27;,&#x27;yyyy-MM-dd HH:mm:ss&#x27;);
+多表结构相同
 
-1543943400
+create table tables as
+select id,name from player1
+union all
+select id,name from player2;
 
- spark-sql&gt; select
+
+多表结构不相同
+
+create table tables2
+as with
+a as (select id,name from player1),
+b as (selec
         </a>
       </p>
 
