@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>jvm虚拟机探究 - Kskuangshao</title>
+  <title>新虚拟机、服务器搭建 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-19 01:26" pubdate>
-        2020年11月19日 凌晨
+      <time datetime="2020-11-22 21:39" pubdate>
+        2020年11月22日 晚上
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      248 字
+      28 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      1
        分钟
     </span>
   
@@ -217,56 +217,10 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">jvm虚拟机探究</h1>
+            <h1 style="display: none">新虚拟机、服务器搭建</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="为什么学习jvm虚拟机"><a href="#为什么学习jvm虚拟机" class="headerlink" title="为什么学习jvm虚拟机"></a>为什么学习jvm虚拟机</h1><ul>
-<li>生产上运行spark的时候时常出现GC OVERHEAD等报错</li>
-<li>作为对于java语言底层（深层）的了解</li>
-</ul>
-<h1 id="JVM探究"><a href="#JVM探究" class="headerlink" title="JVM探究"></a>JVM探究</h1><ul>
-<li><p>谈谈你对jvm的理解？java8虚拟机和之前的变换更新？</p>
-</li>
-<li><p>什么是oom？什么是栈溢出StackOverFlowError？怎么分析？</p>
-</li>
-<li><p>JVM常用调优参数？</p>
-</li>
-<li><p>内存快照如何抓取，怎么分析Dump文件？</p>
-</li>
-<li><p>谈谈JVM中类加载器你的认识？</p>
-<p>jvm中类加载器 rt-jar、ext(扩展jar包)、用户的application</p>
-</li>
-</ul>
-<h2 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h2><ul>
-<li>jvm的位置</li>
-<li>jvm体系结构</li>
-<li>类加载器</li>
-<li>双亲委派机制</li>
-<li>沙箱安全机制</li>
-<li>Native</li>
-<li>PC寄存器、方法区、栈、堆</li>
-<li>三种JVM</li>
-<li>新生代、老年区、永久区</li>
-<li>堆内存调优</li>
-<li>GC 常用算法</li>
-<li>JMM</li>
-<li>总结</li>
-</ul>
-<h3 id="学习方案"><a href="#学习方案" class="headerlink" title="学习方案"></a>学习方案</h3><ul>
-<li>百度</li>
-<li>思维导图 - 在线思维导图去搜索</li>
-</ul>
-<p><img src="images/image-20201119013059487.png" srcset="/img/loading.gif" alt="image-20201119013059487"></p>
-<h4 id="1-类加载器"><a href="#1-类加载器" class="headerlink" title="1. 类加载器"></a>1. 类加载器</h4><ul>
-<li>作用：加载class文件</li>
-</ul>
-<p><img src="D:\hexo\kskuangshaoblog\source_posts\images\image-20201117010051266.png" srcset="/img/loading.gif" alt="image-20201117010051266"></p>
-<ol>
-<li>虚拟机自带加载器</li>
-<li>启动类加载器</li>
-<li>扩展类加载器</li>
-<li>应用类加载器</li>
-</ol>
+              <h1 id="虚拟机需要下载centos系统"><a href="#虚拟机需要下载centos系统" class="headerlink" title="虚拟机需要下载centos系统"></a>虚拟机需要下载centos系统</h1><h2 id="centos下载地址"><a href="#centos下载地址" class="headerlink" title="centos下载地址"></a>centos下载地址</h2><p>&lt;<a target="_blank" rel="noopener" href="https://man.linuxde.net/download/CentOS/">CentOS下载，CentOS系统下载_Linux下载 (linuxde.net)</a>&gt;</p>
 
             </div>
             <hr>
@@ -277,7 +231,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/jvm/">jvm</a>
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
                     
                   </div>
                 
@@ -290,18 +244,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/22/linux01/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">新虚拟机、服务器搭建</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/19/hive02/">
-                        <span class="hidden-mobile">生产关于hive，sparksql的问题总结</span>
+                      <a href="/2020/11/19/jvm01/">
+                        <span class="hidden-mobile">jvm虚拟机探究</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -437,7 +385,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "jvm虚拟机探究&nbsp;",
+        "新虚拟机、服务器搭建&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

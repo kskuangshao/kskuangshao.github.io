@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      2.8k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      24
+      41
        分钟
     </span>
   
@@ -564,7 +564,243 @@ constraint_specification:
 </ul>
 <pre><code class="hljs sql"><span class="hljs-keyword">truncate</span> <span class="hljs-keyword">table</span> default.student;</code></pre>
 
-<h3 id="5-查询"><a href="#5-查询" class="headerlink" title="5. 查询"></a>5. 查询</h3>
+<h3 id="5-查询"><a href="#5-查询" class="headerlink" title="5. 查询"></a>5. 查询</h3><ul>
+<li>匹配多个单词</li>
+<li>匹配一个单词</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;k%&#x27;</span>;</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;k_&#x27;</span>;</code></pre>
+
+<ul>
+<li>正则（包含2的）</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> sal <span class="hljs-keyword">RLIKE</span> <span class="hljs-string">&#x27;[2]&#x27;</span>;</code></pre>
+
+<h4 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h4><ul>
+<li>and/or/not</li>
+</ul>
+<h3 id="6-分组"><a href="#6-分组" class="headerlink" title="6. 分组"></a>6. 分组</h3><h4 id="group-by"><a href="#group-by" class="headerlink" title="group by"></a>group by</h4><h4 id="having"><a href="#having" class="headerlink" title="having"></a>having</h4><ul>
+<li>配合group by 使用</li>
+</ul>
+<h4 id="join"><a href="#join" class="headerlink" title="join"></a>join</h4><ul>
+<li>支持等值连接,不支持非等值连接</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> a.name,b.age,c.sex
+<span class="hljs-keyword">from</span> student a
+<span class="hljs-keyword">join</span> person b
+<span class="hljs-keyword">on</span> a.id = b.id
+<span class="hljs-keyword">join</span> emp c
+<span class="hljs-keyword">on</span> a.id = c.id;</code></pre>
+
+
+
+<h4 id="笛卡尔积"><a href="#笛卡尔积" class="headerlink" title="笛卡尔积"></a>笛卡尔积</h4><ul>
+<li>省略连接条件</li>
+<li>连接条件无效</li>
+<li>表中所有行相互连接</li>
+</ul>
+<h3 id="7-排序"><a href="#7-排序" class="headerlink" title="7. 排序"></a>7. 排序</h3><h4 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h4><ul>
+<li>全局排序，只有一个reducer</li>
+<li>放到句尾</li>
+</ul>
+<h4 id="sort-by"><a href="#sort-by" class="headerlink" title="sort by"></a>sort by</h4><ul>
+<li>局部排序，reducer内排序</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">set</span> mapreduce.job.reduces=<span class="hljs-number">3</span>;</code></pre>
+
+<h4 id="distribute-by"><a href="#distribute-by" class="headerlink" title="distribute by"></a>distribute by</h4><ul>
+<li>类似于mr中的partition进行分区，结合sort by使用</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-comment">--按照部门分区，工资排序</span>
+<span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">directory</span> <span class="hljs-string">&#x27;/opt/module/datas/dis-by&#x27;</span>
+<span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">distribute</span> <span class="hljs-keyword">by</span> deptno <span class="hljs-keyword">sort</span> <span class="hljs-keyword">by</span> sal;</code></pre>
+
+<h4 id="cluster-by"><a href="#cluster-by" class="headerlink" title="cluster by"></a>cluster by</h4><ul>
+<li>distribute by + sort by 并且分区字段和排序字段相同</li>
+<li>只能升序</li>
+<li>防止数据倾斜</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>order by只有一个reducer</p>
+</li>
+<li><p>distribute by + sort by 指定一个分区字段，在分区内排序，可以防止数据倾斜</p>
+</li>
+<li><p>cluster by 同上，但是不能降序</p>
+</li>
+<li><p>建表语句里有ed，查询里没有ed</p>
+</li>
+</ul>
+<h1 id="分桶表"><a href="#分桶表" class="headerlink" title="分桶表"></a>分桶表</h1><ul>
+<li>分区表放到不同的文件夹，分桶表放到不同的文件</li>
+</ul>
+<h2 id="创建分桶表"><a href="#创建分桶表" class="headerlink" title="创建分桶表"></a>创建分桶表</h2><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> stu_buck(<span class="hljs-keyword">id</span> <span class="hljs-built_in">int</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">string</span>)
+clustered <span class="hljs-keyword">by</span>(<span class="hljs-keyword">id</span>) <span class="hljs-comment">--分桶关键字</span>
+<span class="hljs-keyword">into</span> <span class="hljs-number">4</span> buckets <span class="hljs-comment">--几个桶</span>
+<span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span>;</code></pre>
+
+<ul>
+<li>load data进去，hdfs上的文件不会拆开</li>
+</ul>
+<h4 id="需要设置属性"><a href="#需要设置属性" class="headerlink" title="需要设置属性"></a>需要设置属性</h4><pre><code class="hljs sql"><span class="hljs-keyword">set</span> hive.enforce.bucketing=<span class="hljs-literal">true</span>; <span class="hljs-comment">--开启分桶</span>
+<span class="hljs-keyword">set</span> mapreduce.job.reduces=<span class="hljs-number">-1</span>; <span class="hljs-comment">--根据桶数自动设置reducer个数</span>
+<span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> stu_buck <span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>,<span class="hljs-keyword">name</span> <span class="hljs-keyword">from</span> stu;</code></pre>
+
+<h4 id="分桶抽样查询"><a href="#分桶抽样查询" class="headerlink" title="分桶抽样查询"></a>分桶抽样查询</h4><ul>
+<li>tablesample(bucket x out of y) </li>
+<li>x从哪个桶开始抽</li>
+<li>y必须是x的倍数或者因子</li>
+<li>举个例子 16个桶 x,y = 1,4 ,抽的是1,5,9,13</li>
+<li>x&lt;y</li>
+<li>z桶个数 ，（x,y）  第一个桶 x，第二个桶 x+y ,第三个桶x+2y。。。 一共z/y个桶</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> stu_buck <span class="hljs-keyword">tablesample</span>(<span class="hljs-keyword">bucket</span> <span class="hljs-number">1</span> <span class="hljs-keyword">out</span> <span class="hljs-keyword">of</span> <span class="hljs-number">4</span> <span class="hljs-keyword">on</span> <span class="hljs-keyword">id</span>);</code></pre>
+
+<h1 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h1><h2 id="空字段赋值"><a href="#空字段赋值" class="headerlink" title="空字段赋值"></a>空字段赋值</h2><ul>
+<li>可以用值代替，可以用列</li>
+</ul>
+<pre><code class="hljs sql">nvl(comm,-1) <span class="hljs-comment">--如果奖金为空，-1代替</span></code></pre>
+
+<pre><code class="hljs sql">nvl(comm,nvl(sal,0)) <span class="hljs-comment">--如果奖金为空，用工资，如果工资为空，为0</span></code></pre>
+
+<h2 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h2><pre><code class="hljs sql"><span class="hljs-keyword">select</span> data_format(<span class="hljs-string">&#x27;2020-5-23&#x27;</span>,<span class="hljs-string">&#x27;yyyy-MM-dd HH:mm:ss&#x27;</span>);</code></pre>
+
+<ul>
+<li>2020/05/20这种格式的时间处理</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> regexp_replace(<span class="hljs-string">&#x27;2020/5/20&#x27;</span>,<span class="hljs-string">&#x27;/&#x27;</span>,<span class="hljs-string">&#x27;-&#x27;</span>);</code></pre>
+
+<ul>
+<li>时间相加、减</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> data_add(<span class="hljs-string">&#x27;2020-5-23&#x27;</span>,<span class="hljs-number">3</span>);</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> data_add(<span class="hljs-string">&#x27;2020-5-23,-5&#x27;</span>);<span class="hljs-comment">--指定天数减5天</span></code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">datediff</span>(<span class="hljs-string">&#x27;2020-6-22&#x27;</span>,<span class="hljs-string">&#x27;2020-6-20&#x27;</span>);<span class="hljs-comment">--前减后</span></code></pre>
+
+<h2 id="窗口函数"><a href="#窗口函数" class="headerlink" title="窗口函数"></a>窗口函数</h2><ul>
+<li>oracle，mysql5.8+，hive支持</li>
+</ul>
+<pre><code class="hljs sql">OVER() 指定分析函数的数据窗口打下，随着行变化而变化</code></pre>
+
+<pre><code class="hljs pgsql"><span class="hljs-keyword">CURRENT</span> <span class="hljs-keyword">ROW</span> 当前行
+n <span class="hljs-keyword">PRECEDING</span> 往前n行
+n <span class="hljs-keyword">FOLLOWING</span> 往后n行
+<span class="hljs-keyword">UNBOUNDED</span> ：<span class="hljs-keyword">UNBOUNDED</span> <span class="hljs-keyword">PRECEDING</span>表示从前面的起点，<span class="hljs-keyword">UNBOUNDED</span> <span class="hljs-keyword">FOLLOWING</span>到后面的终点</code></pre>
+
+<pre><code class="hljs reasonml"><span class="hljs-constructor">LAG(<span class="hljs-params">col</span>,<span class="hljs-params">n</span>)</span>： 往前第n行数据
+<span class="hljs-constructor">LEAD(<span class="hljs-params">col</span>,<span class="hljs-params">n</span>)</span>： 往后第n行数据
+<span class="hljs-constructor">NTILE(<span class="hljs-params">n</span>)</span>：把有序分区中的行分发到指定数据组中，各个组有编号，编号从<span class="hljs-number">1</span>开始，对于每一行，NTILE返回此行所属的组的编号。（注意：n必须为<span class="hljs-built_in">int</span>类型）</code></pre>
+
+
+
+<ul>
+<li>需求</li>
+</ul>
+<ol>
+<li>查询2017年4月份购买过的顾客及总人数</li>
+<li>查询顾客的购买明细及月购买总额</li>
+<li>上述场景，将要cost按照日期进行累加</li>
+<li>查询顾客上次购买时间</li>
+<li>查询前20%的订单信息</li>
+</ol>
+<ul>
+<li>数据准备</li>
+</ul>
+<pre><code class="hljs sql">name,orderdate,cost
+
+jack,2017-01-01,10
+jack,2017-01-01,20
+jack,2017-04-01,50
+toms,2017-04-12,50
+toms,2017-04-12,20</code></pre>
+
+<ul>
+<li>sql</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">name</span>,<span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">over</span>()
+<span class="hljs-keyword">from</span> bussiness
+<span class="hljs-keyword">where</span> <span class="hljs-keyword">substring</span>(orderdate,<span class="hljs-number">1</span>,<span class="hljs-number">7</span>)=<span class="hljs-string">&#x27;2017-04&#x27;</span>
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> <span class="hljs-keyword">name</span>;</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> 
+ *, <span class="hljs-comment">--消费明细</span>
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">cost</span>) <span class="hljs-comment">--购买总额</span>
+<span class="hljs-keyword">from</span> business;</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span>
+ orderdate,
+ <span class="hljs-keyword">cost</span>，
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">cost</span>) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> orderdate) <span class="hljs-comment">--cost按月累加实现</span>
+<span class="hljs-keyword">from</span> business
+<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> orderdate;</code></pre>
+
+<ul>
+<li>如下这个是难点</li>
+<li>lag往下错位，lead往上错位</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span>
+ <span class="hljs-keyword">name</span>,
+ orderdate,
+ <span class="hljs-keyword">cost</span>,
+ lag(orderdate,<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;1970-01-01&#x27;</span>) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">distribute</span> <span class="hljs-keyword">by</span> <span class="hljs-keyword">name</span> <span class="hljs-keyword">sort</span> <span class="hljs-keyword">by</span> orderdate) <span class="hljs-comment">--新的一列，1.每个窗口初始值是参数；2.orderdate是上一行的orderdate。（错一位）</span>
+<span class="hljs-keyword">from</span> business;</code></pre>
+
+
+
+<h2 id="case-when、if案例"><a href="#case-when、if案例" class="headerlink" title="case when、if案例"></a>case when、if案例</h2><ul>
+<li>员工表，统计男女数量</li>
+</ul>
+<pre><code class="hljs sql">(name string,dept_id string,sex_string)</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span>
+ dept_id,
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">case</span> sex <span class="hljs-keyword">when</span> <span class="hljs-string">&#x27;男&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span> <span class="hljs-keyword">end</span>) male_count,
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">case</span> sex <span class="hljs-keyword">when</span> <span class="hljs-string">&#x27;女&#x27;</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span> <span class="hljs-keyword">end</span>) female_count
+<span class="hljs-keyword">from</span>
+ emp_sex
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span>
+ dept_id;</code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span>
+ dept_id,
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">if</span>(sex=<span class="hljs-string">&#x27;男&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>)) male_count,
+ <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">if</span>(sex=<span class="hljs-string">&#x27;女&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>)) female_count
+<span class="hljs-keyword">from</span> emp_sex
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span>
+ dept_id;</code></pre>
+
+<h2 id="行转列、列转行"><a href="#行转列、列转行" class="headerlink" title="行转列、列转行"></a>行转列、列转行</h2><ul>
+<li><p>注意：concat拼接一列要用聚合函数group by</p>
+</li>
+<li><p>多个列合并到一起</p>
+</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">concat</span>(deptno,<span class="hljs-string">&#x27;-&#x27;</span>,dname) <span class="hljs-keyword">from</span> dept;</code></pre>
+
+<ul>
+<li>注意，类型是数组，类型要相同</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">concat_ws</span>(<span class="hljs-string">&#x27;-&#x27;</span>,<span class="hljs-keyword">name</span>,age,sex) <span class="hljs-keyword">from</span> student;</code></pre>
+
+<ul>
+<li>把一列转化为一行，格式是[  ,  ,  ,  ,]</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> collect_set(<span class="hljs-keyword">id</span>) <span class="hljs-keyword">from</span> student;</code></pre>
+
+<ul>
+<li><p>explode(col)，将hive中一列中复杂的asrray或者map结构拆分成多行</p>
+</li>
+<li><p>lateral view</p>
+</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> 
+ movie,
+ categroy_name
+<span class="hljs-keyword">from</span> movie_info <span class="hljs-keyword">lateral</span> <span class="hljs-keyword">view</span> <span class="hljs-keyword">explode</span>(<span class="hljs-keyword">category</span>) table_tmp <span class="hljs-keyword">as</span> category_name;</code></pre>
+
+
             </div>
             <hr>
             <div>
