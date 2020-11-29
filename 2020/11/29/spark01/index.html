@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>hue安装部署 - Kskuangshao</title>
+  <title>spark-start - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,7 +165,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-29 20:19" pubdate>
+      <time datetime="2020-11-29 22:09" pubdate>
         2020年11月29日 晚上
       </time>
     </span>
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      642 字
+      397 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      5
        分钟
     </span>
   
@@ -217,123 +217,44 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">hue安装部署</h1>
+            <h1 style="display: none">spark-start</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="hue安装部署"><a href="#hue安装部署" class="headerlink" title="hue安装部署"></a>hue安装部署</h1><pre><code>    需求：统计某些指标、导数
-数据：Hive/SparkSQL/Impala/RDBMS
+              <h1 id="spark介绍"><a href="#spark介绍" class="headerlink" title="spark介绍"></a>spark介绍</h1><h2 id="一、spark产生背景"><a href="#一、spark产生背景" class="headerlink" title="一、spark产生背景"></a>一、spark产生背景</h2><p>​            mr的局限性，mr编程模型的缺点</p>
+<pre><code>1. 计算性能不高，Task--&gt;JVM process
+   2. 交互式、多迭代、实时处理or流处理
+   3. 编程繁琐
+   4. 各个框架各自为战（hadoop-&gt;资源调度，hive-&gt;sql来翻译成mr作业，storm实时处理）</code></pre>
+<h2 id="二、目前框架的需求"><a href="#二、目前框架的需求" class="headerlink" title="二、目前框架的需求"></a>二、目前框架的需求</h2><pre><code>1. 批处理、离线处理-&gt;高吞吐量
+   2. 流处理、实时处理-&gt;时效性
+   3. 交互式-&gt;低延时
+   4. 批流一体</code></pre>
+<h2 id="三、spark的特点"><a href="#三、spark的特点" class="headerlink" title="三、spark的特点"></a>三、spark的特点</h2><pre><code>1. transformation、action-&gt;一定遇到action才会执行作业
+   2. task-&gt;线程级别、非常轻量
+   3. DAG、pipeline
+   4. 延迟调度：计算跟着数据走，你的资源不够，延迟触发！
+   5. 易用：java、python、scala、sql均可，超过80个high-level operator</code></pre>
+<h2 id="四、如何选择spark版本"><a href="#四、如何选择spark版本" class="headerlink" title="四、如何选择spark版本"></a>四、如何选择spark版本</h2><ol>
+<li>cdh5.16.2的spark版本为1.6，太低了–&gt;需要在官网下载2.4.5的spark源码包编译出安装包</li>
+</ol>
+<h2 id="五、spark-2-4-5的版本每个数字的意义"><a href="#五、spark-2-4-5的版本每个数字的意义" class="headerlink" title="五、spark-2.4.5的版本每个数字的意义"></a>五、spark-2.4.5的版本每个数字的意义</h2><pre><code>1. Major Version(may change APIs)</code></pre>
+<p>注意：千万不要在你的接口API层面直接使用底层引擎的API</p>
+<ol start="2">
+<li>Minor version(add APIs/Featrues)</li>
+<li>Patch version(only bug fix)    </li>
+</ol>
+<p>特点：大数据场景：（必然处理的场景）存储+计算</p>
+<h1 id="Spark编译安装"><a href="#Spark编译安装" class="headerlink" title="Spark编译安装"></a>Spark编译安装</h1><h2 id="spark下载"><a href="#spark下载" class="headerlink" title="spark下载"></a>spark下载</h2><p><a target="_blank" rel="noopener" href="https://github.com/apache/spark">https://github.com/apache/spark</a></p>
+<h2 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h2><pre><code class="hljs shell">mvn -DskipTests clean package
 
-实现方式一：自己动手统计
-    登录到Hive所在机器
-    编写Hive QL语句，得到结果
-    结果放到Excel：柱状图、折线图、饼图等等
+./dev/make-distribution.sh --name 2.6.0-cdh5.16.2 --tgz -Pyarn -Phive -Phive-thriftserver -Pscala-2.12 -Phadoop-2.6 -Dhadoop.version=2.6.0-cdh5.16.2
 
-实现方式二：通过类似的数据平台
-    需求提给平台组
-    等待平台组去处理
-    拿到结果，自己展示
+spark-2.4.5-bin-2.6.0-cdh5.16.2.tgz
 
-    ==&gt;
 
-数据平台上如果能够提供/开放出来类似于UI的界面
-在UI界面上输入SQL，拿到结果并直接在平台上进行图形化的展示
+<span class="hljs-meta">#</span><span class="bash">jars 通过这个配置来传递我们需要的jar包，多个之间使用逗号分隔</span></code></pre>
 
-开源的框架是否有类似的支持的：HUE Zeppelin
-是在日常的工作中是非常实用的</code></pre>
-<pre><code class="hljs awk">hue的官方网站 https:<span class="hljs-regexp">//g</span>ethue.com/</code></pre>
-<pre><code>前置要求：  Python2.7     MySQL       Java</code></pre>
-<pre><code class="hljs apache"><span class="hljs-attribute">1</span>.安装依赖
 
-<span class="hljs-attribute">sudo</span> yum install -y ant asciidoc cyrus-sasl-devel cyrus-sasl-gssapi cyrus-sasl-plain gcc gcc-c++ krb<span class="hljs-number">5</span>-devel libffi-devel libxml<span class="hljs-number">2</span>-devel libxslt-devel make  mysql mysql-devel openldap-devel python-devel sqlite-devel gmp-devel
-</code></pre>
-<pre><code class="hljs apache"><span class="hljs-attribute">2</span>.下载HUE	
-<span class="hljs-attribute">http</span>://archive.cloudera.com/cdh<span class="hljs-number">5</span>/cdh/<span class="hljs-number">5</span>/     cdh<span class="hljs-number">5</span>.<span class="hljs-number">16</span>.<span class="hljs-number">2</span>
-
-<span class="hljs-attribute">wget</span> http://archive.cloudera.com/cdh<span class="hljs-number">5</span>/cdh/<span class="hljs-number">5</span>/hue-<span class="hljs-number">3</span>.<span class="hljs-number">9</span>.<span class="hljs-number">0</span>-cdh<span class="hljs-number">5</span>.<span class="hljs-number">16</span>.<span class="hljs-number">2</span>.tar.gz</code></pre>
-
-<pre><code class="hljs angelscript"><span class="hljs-number">3.</span>解压HUE到~/app下
-	切换到~/app/hue<span class="hljs-number">-3.9</span><span class="hljs-number">.0</span>-cdh5<span class="hljs-number">.16</span><span class="hljs-number">.2</span>
-	make apps</code></pre>
-<pre><code class="hljs routeros">4.HUE配置
-    <span class="hljs-variable">$HUE_HOME</span>/desktop/conf/hue.ini
-    [desktop]
-            ##这个随便写，越长越好
-			<span class="hljs-attribute">secret_key</span>=qwert1234534566
-			<span class="hljs-attribute">http_host</span>=JD
-			<span class="hljs-attribute">http_port</span>=38888
-			<span class="hljs-attribute">time_zone</span>=Asia/Shanghai
-			<span class="hljs-attribute">default_user</span>=hadoop
-			<span class="hljs-attribute">default_hdfs_superuser</span>=hadoop
-			<span class="hljs-attribute">localhost</span>=JD
-			
-	        <span class="hljs-attribute">resourcemanager_host</span>=JD
-	        <span class="hljs-attribute">resourcemanager_port</span>=8032
-	        <span class="hljs-attribute">resourcemanager_api_url</span>=http://JD:8088
-	        <span class="hljs-attribute">proxy_api_url</span>=http://JD:8088
-	        <span class="hljs-attribute">history_server_api_url</span>=http://JD:19888</code></pre>
-
-<pre><code class="hljs xml">5.HUE整合HDFS
-	core-site.xml
-		<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.proxyuser.hadoop.hosts<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.proxyuser.hadoop.groups<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-		
-	hdfs-site.xml
-		<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.webhdfs.enabled<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-	修改完Hadoop相关的配置之后，需要重启才生效</code></pre>
-<pre><code class="hljs dts"><span class="hljs-number">6.</span>HUE整合MR/YARN
-	你需要启动  mr-jobhistory-daemon.sh 
-	mapred-site.xml
-		<span class="hljs-params">&lt;property&gt;</span>
-			<span class="hljs-params">&lt;name&gt;</span>mapreduce.jobhistory.address<span class="hljs-params">&lt;/name&gt;</span>
-			<span class="hljs-params">&lt;value&gt;</span>JD:<span class="hljs-number">10020</span><span class="hljs-params">&lt;/value&gt;</span>
-		<span class="hljs-params">&lt;/property&gt;</span>
-
-		<span class="hljs-params">&lt;property&gt;</span>
-			<span class="hljs-params">&lt;name&gt;</span>mapreduce.jobhistory.webapp.address<span class="hljs-params">&lt;/name&gt;</span>
-			<span class="hljs-params">&lt;value&gt;</span>JD:<span class="hljs-number">19888</span><span class="hljs-params">&lt;/value&gt;</span>
-		<span class="hljs-params">&lt;/property&gt;</span>
-
-		<span class="hljs-params">&lt;property&gt;</span>
-			<span class="hljs-params">&lt;name&gt;</span>mapreduce.jobhistory.done-dir<span class="hljs-params">&lt;/name&gt;</span>
-			<span class="hljs-params">&lt;value&gt;</span><span class="hljs-meta-keyword">/history/</span>done<span class="hljs-params">&lt;/value&gt;</span>
-		<span class="hljs-params">&lt;/property&gt;</span>
-
-		<span class="hljs-params">&lt;property&gt;</span>
-			<span class="hljs-params">&lt;name&gt;</span>mapreduce.jobhistory.intermediate-done-dir<span class="hljs-params">&lt;/name&gt;</span>
-			<span class="hljs-params">&lt;value&gt;</span><span class="hljs-meta-keyword">/history/</span>done_intermediate<span class="hljs-params">&lt;/value&gt;</span>
-		<span class="hljs-params">&lt;/property&gt;</span></code></pre>
-
-<pre><code class="hljs routeros">7.HUE整合MySQL
-	访问MySQL的数据
-	搜/librdbms
-	<span class="hljs-attribute">nice_name</span>=<span class="hljs-string">&quot;kskuangshao DB&quot;</span>
-	<span class="hljs-attribute">name</span>=hivedb
-	<span class="hljs-attribute">engine</span>=mysql
-	<span class="hljs-attribute">host</span>=JD
-	<span class="hljs-attribute">port</span>=3306
-	<span class="hljs-attribute">user</span>=root
-	<span class="hljs-attribute">password</span>=123456
-不能多人并发访问mysql的问题：（在mysql里创建hue库。。。。官网有叙述，这里不记录）</code></pre>
-
-<pre><code class="hljs routeros">8.HUE整合Hive
-	一定要先启动hiveserver2	
-	/beeswax
-	<span class="hljs-attribute">hive_server_host</span>=JD
-	<span class="hljs-attribute">hive_server_port</span>=10000
-	<span class="hljs-attribute">hive_conf_dir</span>=/var/local/hive/conf</code></pre>
-
-<pre><code class="hljs awk"><span class="hljs-number">9</span>.启动HUE
-		hue目录下
-		<span class="hljs-variable">$&#123;HUE_HOME&#125;</span><span class="hljs-regexp">/build/</span>env<span class="hljs-regexp">/bin/</span>supervisor</code></pre>
             </div>
             <hr>
             <div>
@@ -343,7 +264,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/hue/">hue</a>
+                      <a class="hover-with-bg" href="/tags/spark/">spark</a>
                     
                   </div>
                 
@@ -356,18 +277,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/29/spark01/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">spark-start</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/29/maven01/">
-                        <span class="hidden-mobile">maven安装部署</span>
+                      <a href="/2020/11/29/hue/">
+                        <span class="hidden-mobile">hue安装部署</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -503,7 +418,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "hue安装部署&nbsp;",
+        "spark-start&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
