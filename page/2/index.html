@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>归档 - Kskuangshao</title>
+  <title>Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -43,7 +43,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -150,6 +150,10 @@
           </div>
 
           
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
         </div>
       </div>
     </div>
@@ -159,57 +163,62 @@
     
       <div class="container nopadding-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 11 篇文章</p>
-  <hr>
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2020</p>
     
-    <a href="/2020/10/28/tez/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">tez</span>
-      <time style="float: right;">10-28</time>
-    </a>
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/17/hello-world/">Hello World</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/17/hello-world/">
+          
+          
+            
+          
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-17 20:14" pubdate>
+              2020-10-17
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
   
-    
-    <a href="/2020/10/28/sql01/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">sql函数</span>
-      <time style="float: right;">10-28</time>
-    </a>
-  
-    
-    <a href="/2020/10/28/sql02/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">sql语句</span>
-      <time style="float: right;">10-28</time>
-    </a>
-  
-    
-    <a href="/2020/10/26/hive01/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">hive数据类型、语法、分区表等概念</span>
-      <time style="float: right;">10-26</time>
-    </a>
-  
-    
-    <a href="/2020/10/18/hexo/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">hexo的安装以及常用命令</span>
-      <time style="float: right;">10-18</time>
-    </a>
-  
-    
-    <a href="/2020/10/17/hello-world/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Hello World</span>
-      <time style="float: right;">10-17</time>
-    </a>
-  
-</div>
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -299,7 +308,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "归档&nbsp;",
+        "狂少的BLOG&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

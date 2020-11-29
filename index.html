@@ -177,6 +177,49 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/11/29/hadoop01/">hadoop伪分布式安装部署</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/11/29/hadoop01/">
+          
+          
+            
+          
+          hadoop伪分布式安装部署1.wget下载(这种方式快)wget http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz
+2.关于目录1.创建文件目录[ks@JD ~]$mkdir app software sourcecode log data tmp lib
+a.解压到家目录/app[ks@JD software]
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-11-29 14:51" pubdate>
+              2020-11-29
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/hadoop/">hadoop</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/11/23/markdown/">markdown教程</a>
       </h1>
 
@@ -237,20 +280,11 @@ MarkDown基础基础篇视频讲解链接画图篇视频讲解链接
           
             
           
-          新创建虚拟机准备工作centos下载地址&lt;CentOS下载，CentOS系统下载_Linux下载 (linuxde.net)&gt;
-查看本机ip地址ifconfig
-
-关闭防火墙systemctl stop firewalld
-systemctl disable firewalld
-##不是root用户+sudo
-
-
-
-修改主机名修改两个地方
-
-添加当前ip 主机名
-
-vim /etc/h
+          新创建虚拟机准备工作卸载自带的openjdk#查看java版本
+[root@hadoop001 software]# java -version
+java version &quot;1.7.0_51&quot;
+OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)
+OpenJDK 64-Bit Server VM (build
         </a>
       </p>
 
@@ -676,42 +710,19 @@ float
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/17/hello-world/">Hello World</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/17/hello-world/">
-          
-          
-            
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-17 20:14" pubdate>
-              2020-10-17
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
 
 
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 

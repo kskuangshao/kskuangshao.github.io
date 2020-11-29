@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>新虚拟机、服务器搭建、常用命令 - Kskuangshao</title>
+  <title>hadoop伪分布式安装部署 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-22 21:39" pubdate>
-        2020年11月22日 晚上
+      <time datetime="2020-11-29 14:51" pubdate>
+        2020年11月29日 下午
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      824 字
+      533 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      9
        分钟
     </span>
   
@@ -217,147 +217,73 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">新虚拟机、服务器搭建、常用命令</h1>
+            <h1 style="display: none">hadoop伪分布式安装部署</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="新创建虚拟机准备工作"><a href="#新创建虚拟机准备工作" class="headerlink" title="新创建虚拟机准备工作"></a>新创建虚拟机准备工作</h1><h2 id="卸载自带的openjdk"><a href="#卸载自带的openjdk" class="headerlink" title="卸载自带的openjdk"></a>卸载自带的openjdk</h2><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">查看java版本</span>
-[root@hadoop001 software]# java -version
-java version &quot;1.7.0_51&quot;
-OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)
-OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)
+              <h1 id="hadoop伪分布式安装部署"><a href="#hadoop伪分布式安装部署" class="headerlink" title="hadoop伪分布式安装部署"></a>hadoop伪分布式安装部署</h1><h2 id="1-wget下载-这种方式快"><a href="#1-wget下载-这种方式快" class="headerlink" title="1.wget下载(这种方式快)"></a>1.wget下载(这种方式快)</h2><pre><code class="hljs shell">wget http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz</code></pre>
+<h2 id="2-关于目录"><a href="#2-关于目录" class="headerlink" title="2.关于目录"></a>2.关于目录</h2><h3 id="1-创建文件目录"><a href="#1-创建文件目录" class="headerlink" title="1.创建文件目录"></a>1.创建文件目录</h3><pre><code class="hljs shell">[ks@JD ~]$mkdir app software sourcecode log data tmp lib</code></pre>
+<h3 id="a-解压到家目录-app"><a href="#a-解压到家目录-app" class="headerlink" title="a.解压到家目录/app"></a>a.解压到家目录/app</h3><pre><code class="hljs shell">[ks@JD software]$ tar -xzvf hadoop-2.6.0-cdh5.16.2.tar.gz -C ~/app/</code></pre>
+<h3 id="b-做软连接（方便版本更新）（注意前后）"><a href="#b-做软连接（方便版本更新）（注意前后）" class="headerlink" title="b.做软连接（方便版本更新）（注意前后）"></a>b.做软连接（方便版本更新）（注意前后）</h3><pre><code class="hljs shell">[ks@JD app]$ln -s hive-1.1.0-cdh5.16.2 hive</code></pre>
+<h2 id="3-Java环境"><a href="#3-Java环境" class="headerlink" title="3.Java环境"></a>3.Java环境</h2><pre><code class="hljs shell">/usr/java #位置必须是这样</code></pre>
+<h2 id="4-hadoop环境变量"><a href="#4-hadoop环境变量" class="headerlink" title="4.hadoop环境变量"></a>4.hadoop环境变量</h2><pre><code class="hljs shell">[ks@JD ~]$ vi .bashrc
+export HADOOP_HOME=/home/ks/app/hadoop
+export HIVE_HOME=/home/ks/app/hive
+export PATH=$&#123;HADOOP_HOME&#125;/bin:$&#123;HADOOP_HOME&#125;/sbin:$&#123;HIVE_HOME&#125;/bin:$PATH
+[ks@JD ~]$ source .bashrc 
+[ks@JD ~]$ which hdfs
+[ks@JD ~]$ which hive</code></pre>
+<p><a target="_blank" rel="noopener" href="https://hadoop.apache.org去找single/">https://hadoop.apache.org去找single</a> node cluster单节点伪分布式资料</p>
+<h2 id="5-配置ssh信任关系"><a href="#5-配置ssh信任关系" class="headerlink" title="5.配置ssh信任关系"></a>5.配置ssh信任关系</h2><pre><code class="hljs shell">家目录下输入
+<span class="hljs-meta">  $</span><span class="bash"> ssh-keygen -t rsa -P <span class="hljs-string">&#x27;&#x27;</span> -f ~/.ssh/id_rsa</span>
+<span class="hljs-meta">  $</span><span class="bash"> cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span>
+<span class="hljs-meta">  $</span><span class="bash"> chmod 0600 ~/.ssh/authorized_keys</span></code></pre>
+<h2 id="6-etl-hadoop下配置文件"><a href="#6-etl-hadoop下配置文件" class="headerlink" title="6.etl/hadoop下配置文件"></a>6.etl/hadoop下配置文件</h2><h3 id="core-site-xml"><a href="#core-site-xml" class="headerlink" title="core-site.xml"></a>core-site.xml</h3><pre><code class="hljs xml">   <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.defaultFS<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://focus:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+   <span class="hljs-comment">&lt;!--hadoop的tmp目录30天清理一次--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.tmp.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/ks/tmp<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
+<h3 id="hdfs-site-xml"><a href="#hdfs-site-xml" class="headerlink" title="hdfs-site.xml"></a>hdfs-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.replication<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--下面两个参数snn以focus这个localhost启动，不是0.0.0.0启动--&gt;</span>
 
-<span class="hljs-meta">#</span><span class="bash">查看rpm安装的java包</span>
-[root@hadoop001 software]# rpm -qa|grep java
-python-javapackages-3.4.1-5.el7.noarch
-javapackages-tools-3.4.1-5.el7.noarch
-java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64
-tzdata-java-2014b-1.el7.noarch
-java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9868<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
 
-<span class="hljs-meta">#</span><span class="bash">卸载java，注意：.noarch</span>
-[root@hadoop001 software]# rpm -e --nodeps java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64</code></pre>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.https-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9869<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></code></pre>
+<h3 id="mapred-site-xml"><a href="#mapred-site-xml" class="headerlink" title="mapred-site.xml"></a>mapred-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.framework.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>yarn<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
+<h3 id="yarn-site-xml"><a href="#yarn-site-xml" class="headerlink" title="yarn-site.xml"></a>yarn-site.xml</h3><pre><code class="hljs xml">    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>mapreduce_shuffle<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-comment">&lt;!--以防被挖矿--&gt;</span>	
+	<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:18088<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+   	 <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
+<h4 id="hadoop-env-sh"><a href="#hadoop-env-sh" class="headerlink" title="hadoop-env.sh"></a>hadoop-env.sh</h4><pre><code class="hljs elm"><span class="hljs-title">java</span>环境变量ex<span class="hljs-keyword">port</span></code></pre>
 
-<h2 id="centos下载地址"><a href="#centos下载地址" class="headerlink" title="centos下载地址"></a>centos下载地址</h2><p>&lt;<a target="_blank" rel="noopener" href="https://man.linuxde.net/download/CentOS/">CentOS下载，CentOS系统下载_Linux下载 (linuxde.net)</a>&gt;</p>
-<h2 id="查看本机ip地址"><a href="#查看本机ip地址" class="headerlink" title="查看本机ip地址"></a>查看本机ip地址</h2><pre><code class="hljs shell">ifconfig</code></pre>
-
-<h2 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><pre><code class="hljs shell">systemctl stop firewalld
-systemctl disable firewalld
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#不是root用户+sudo</span></span></code></pre>
-
-
-
-<h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><p>修改两个地方</p>
-<ul>
-<li>添加当前ip 主机名</li>
-</ul>
-<pre><code class="hljs shell">vim /etc/hosts</code></pre>
-
-<ul>
-<li>添加主机名</li>
-</ul>
-<pre><code class="hljs shell">vim /etc/hostname</code></pre>
-
-<h2 id="添加用户名用户组"><a href="#添加用户名用户组" class="headerlink" title="添加用户名用户组"></a>添加用户名用户组</h2><pre><code class="hljs shell">[root@JD ~]# useradd rain
-[root@JD ~]# id rain
-uid=1001(rain) gid=1001(rain) 组=1001(rain)
-拓展
-useradd -g testgroup testuser
--g 所属组
--d 家目录
--s 所用的shell 
-用户和组都是rain
-groupadd hadoop</code></pre>
-
-<h2 id="赋予用户组权限"><a href="#赋予用户组权限" class="headerlink" title="赋予用户组权限"></a>赋予用户组权限</h2><p>三种方式，推荐第一种方式</p>
-<pre><code class="hljs shell">vim /etc/passwd
-rain:x:1001:1001::/home/rain:/bin/bash
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#把id修改成0</span></span></code></pre>
-
-<pre><code class="hljs shell">vim /etc/suduoers
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#Allows people in group wheel to run all commands</span></span>
-<span class="hljs-meta">%</span><span class="bash">wheel  ALL=(ALL)  ALL</span>
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#把前面的注释去掉</span></span></code></pre>
-
-<pre><code class="hljs shell">vim /etc/sudoers
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># Allow root to run any commands anywhere</span></span>
-root  ALL=(ALL)   ALL
-<span class="hljs-meta">%</span><span class="bash">hadoop  ALL=(ALL)   ALL</span>
-<span class="hljs-meta">#</span><span class="bash">root下添加一行.注意这里%hadoop代表的意思</span></code></pre>
-
-<pre><code class="hljs shell">
-xxx is not in the sudoers file.  This incident will be reported
-
-
-解决方法:编辑sudoers文件有两种办法，一种是以root帐号执行visudo，另一种是root帐号执行vi /etc/sudoers.其实两者都是修改/etc/sudoers。 
-
-假设你的用户名是“superman”，属于“supergroup”用户组。
-
-为了让用户superman能够执行sudo命，你可以在sudoers文件中加上一下四行的任意一行。
-
-    superman            ALL=（ALL）                ALL 
-
-    %supergroup            ALL=（ALL）                ALL
-
-    superman               ALL=（ALL）                 NOPASSWD：ALL(出于方便，推荐使用此设置) 
-
-    %supergroup            ALL=（ALL）                NOPASSWD：ALL
-
-解释说明：
-第一行：允许用户superman执行sudo命令（需要输入密码）。 
-
-第二行：允许用户组supergroup里面的用户执行sudo命令（需要输入密码）。
-
-第三行：允许用户superman执行sudo命令，并且在执行的时候不输入密码。
-
-第四行：允许用户组supergroup里面的用户执行sudo命令，并且在执行的时候不输入密码。 
-
-当然如果你理解上面的原理后，可以直接输入如下命令解决此问题
-su -
-echo &#x27;xxx ALL=(ALL) ALL&#x27; &gt;&gt; /etc/sudoers  (其中xxx代表用户名)</code></pre>
-
-<pre><code class="hljs shell">chmod g+r path/file 加读权限 当前目录
-chmod -R g+r path/file 加读权限 当前目录以及子目录
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#g-r 减读权限</span></span>
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#g+w 加写权限</span></span>
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#g-w</span></span>
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#g+x 加执行权限</span></span>
-<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#g-x</span></span></code></pre>
-
-
-
-<h2 id="查看用户名和用户组"><a href="#查看用户名和用户组" class="headerlink" title="查看用户名和用户组"></a>查看用户名和用户组</h2><pre><code class="hljs shell">cat /etc/passwd
-cat /etc/group</code></pre>
-
-<h2 id="永久性删除用户账号"><a href="#永久性删除用户账号" class="headerlink" title="永久性删除用户账号"></a>永久性删除用户账号</h2><p>没有测试过</p>
-<pre><code class="hljs shell">userdel testuser  groupdel testgroup  usermod –G testgroup testuser</code></pre>
-
-<h2 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h2><ul>
-<li>权限问题经常出现</li>
-</ul>
-<pre><code class="hljs shell">错误：Permission denied</code></pre>
-
-<ul>
-<li>解决</li>
-</ul>
-<pre><code class="hljs shell">chmod -R 777 文件夹/文件路径
-chown -R 用户：用户组 文件夹/文件路径</code></pre>
-
-<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p>查看文件大小</p>
-<pre><code class="hljs shell">du -sh xxx.log</code></pre>
-
-<p>模糊搜索</p>
-<pre><code class="hljs shell">find / -name &#x27;*hadoop*&#x27;</code></pre>
-
-<p>内存大小</p>
-<pre><code class="hljs shell">top</code></pre>
-
-<pre><code class="hljs shell">free -m</code></pre>
-
-<p>系统状态</p>
-<pre><code class="hljs shell">ps -ef</code></pre>
-
-<p>历史记录</p>
-<pre><code class="hljs shell">history</code></pre>
+<h2 id="7-格式化目录"><a href="#7-格式化目录" class="headerlink" title="7.格式化目录"></a>7.格式化目录</h2><pre><code class="hljs shell">hdfs namenode -format (看是否出现successfully)</code></pre>
+<h2 id="8-启动"><a href="#8-启动" class="headerlink" title="8.启动"></a>8.启动</h2><pre><code class="hljs shell">start-dfs.sh
+start-all</code></pre>
+<h2 id="9-查看hdfs"><a href="#9-查看hdfs" class="headerlink" title="9.查看hdfs"></a>9.查看hdfs</h2><pre><code class="hljs shell">hdfs dfs -ls /</code></pre>
+<h2 id="10-网页查看hdfs"><a href="#10-网页查看hdfs" class="headerlink" title="10.网页查看hdfs"></a>10.网页查看hdfs</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">50070</span>/</code></pre>
+<h2 id="11-网页查看yarn"><a href="#11-网页查看yarn" class="headerlink" title="11.网页查看yarn"></a>11.网页查看yarn</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">18088</span>/</code></pre>
             </div>
             <hr>
             <div>
@@ -367,7 +293,7 @@ chown -R 用户：用户组 文件夹/文件路径</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                      <a class="hover-with-bg" href="/tags/hadoop/">hadoop</a>
                     
                   </div>
                 
@@ -380,18 +306,12 @@ chown -R 用户：用户组 文件夹/文件路径</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/23/markdown/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">markdown教程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/19/jvm01/">
-                        <span class="hidden-mobile">jvm虚拟机探究</span>
+                      <a href="/2020/11/23/markdown/">
+                        <span class="hidden-mobile">markdown教程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -527,7 +447,7 @@ chown -R 用户：用户组 文件夹/文件路径</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "新虚拟机、服务器搭建、常用命令&nbsp;",
+        "hadoop伪分布式安装部署&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
