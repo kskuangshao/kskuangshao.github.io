@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>hadoop伪分布式安装部署 - Kskuangshao</title>
+  <title>maven安装部署 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-29 14:51" pubdate>
-        2020年11月29日 下午
+      <time datetime="2020-11-29 18:57" pubdate>
+        2020年11月29日 晚上
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      533 字
+      240 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      4
        分钟
     </span>
   
@@ -217,73 +217,41 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">hadoop伪分布式安装部署</h1>
+            <h1 style="display: none">maven安装部署</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="hadoop伪分布式安装部署"><a href="#hadoop伪分布式安装部署" class="headerlink" title="hadoop伪分布式安装部署"></a>hadoop伪分布式安装部署</h1><h2 id="1-wget下载-这种方式快"><a href="#1-wget下载-这种方式快" class="headerlink" title="1.wget下载(这种方式快)"></a>1.wget下载(这种方式快)</h2><pre><code class="hljs shell">wget http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz</code></pre>
-<h2 id="2-关于目录"><a href="#2-关于目录" class="headerlink" title="2.关于目录"></a>2.关于目录</h2><h3 id="1-创建文件目录"><a href="#1-创建文件目录" class="headerlink" title="1.创建文件目录"></a>1.创建文件目录</h3><pre><code class="hljs shell">[ks@JD ~]$mkdir app software sourcecode log data tmp lib</code></pre>
-<h3 id="a-解压到家目录-app"><a href="#a-解压到家目录-app" class="headerlink" title="a.解压到家目录/app"></a>a.解压到家目录/app</h3><pre><code class="hljs shell">[ks@JD software]$ tar -xzvf hadoop-2.6.0-cdh5.16.2.tar.gz -C ~/app/</code></pre>
-<h3 id="b-做软连接（方便版本更新）（注意前后）"><a href="#b-做软连接（方便版本更新）（注意前后）" class="headerlink" title="b.做软连接（方便版本更新）（注意前后）"></a>b.做软连接（方便版本更新）（注意前后）</h3><pre><code class="hljs shell">[ks@JD app]$ln -s hive-1.1.0-cdh5.16.2 hive</code></pre>
-<h2 id="3-Java环境"><a href="#3-Java环境" class="headerlink" title="3.Java环境"></a>3.Java环境</h2><pre><code class="hljs shell">/usr/java #位置必须是这样</code></pre>
-<h2 id="4-hadoop环境变量"><a href="#4-hadoop环境变量" class="headerlink" title="4.hadoop环境变量"></a>4.hadoop环境变量</h2><pre><code class="hljs shell">[ks@JD ~]$ vi .bashrc
-export HADOOP_HOME=/home/ks/app/hadoop
-export HIVE_HOME=/home/ks/app/hive
-export PATH=$&#123;HADOOP_HOME&#125;/bin:$&#123;HADOOP_HOME&#125;/sbin:$&#123;HIVE_HOME&#125;/bin:$PATH
-[ks@JD ~]$ source .bashrc 
-[ks@JD ~]$ which hdfs
-[ks@JD ~]$ which hive</code></pre>
-<p><a target="_blank" rel="noopener" href="https://hadoop.apache.org去找single/">https://hadoop.apache.org去找single</a> node cluster单节点伪分布式资料</p>
-<h2 id="5-配置ssh信任关系"><a href="#5-配置ssh信任关系" class="headerlink" title="5.配置ssh信任关系"></a>5.配置ssh信任关系</h2><pre><code class="hljs shell">家目录下输入
-<span class="hljs-meta">  $</span><span class="bash"> ssh-keygen -t rsa -P <span class="hljs-string">&#x27;&#x27;</span> -f ~/.ssh/id_rsa</span>
-<span class="hljs-meta">  $</span><span class="bash"> cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span>
-<span class="hljs-meta">  $</span><span class="bash"> chmod 0600 ~/.ssh/authorized_keys</span></code></pre>
-<h2 id="6-etl-hadoop下配置文件"><a href="#6-etl-hadoop下配置文件" class="headerlink" title="6.etl/hadoop下配置文件"></a>6.etl/hadoop下配置文件</h2><h3 id="core-site-xml"><a href="#core-site-xml" class="headerlink" title="core-site.xml"></a>core-site.xml</h3><pre><code class="hljs xml">   <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.defaultFS<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://focus:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-   <span class="hljs-comment">&lt;!--hadoop的tmp目录30天清理一次--&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.tmp.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/ks/tmp<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h3 id="hdfs-site-xml"><a href="#hdfs-site-xml" class="headerlink" title="hdfs-site.xml"></a>hdfs-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.replication<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-    <span class="hljs-comment">&lt;!--下面两个参数snn以focus这个localhost启动，不是0.0.0.0启动--&gt;</span>
+              <h1 id="maven安装部署"><a href="#maven安装部署" class="headerlink" title="maven安装部署"></a>maven安装部署</h1><h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>​    我的电脑-&gt;高级系统设置-&gt;环境变量-&gt;①系统变量里新建kv （K=MAVEN_HOME,V=路径）②path里添加%MAVEN_HOME%\bin</p>
+<h2 id="验证环境变量是会否生效"><a href="#验证环境变量是会否生效" class="headerlink" title="验证环境变量是会否生效"></a>验证环境变量是会否生效</h2><pre><code class="hljs armasm"><span class="hljs-keyword">mvn</span> -v</code></pre>
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9868<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<h2 id="修改本地maven库-一共三项"><a href="#修改本地maven库-一共三项" class="headerlink" title="修改本地maven库(一共三项)"></a>修改本地maven库(一共三项)</h2><pre><code class="hljs shell">&lt;localRepository&gt;E:\mvn_localRepository&lt;/localRepository&gt;
 
-    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.https-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9869<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></code></pre>
-<h3 id="mapred-site-xml"><a href="#mapred-site-xml" class="headerlink" title="mapred-site.xml"></a>mapred-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.framework.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>yarn<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h3 id="yarn-site-xml"><a href="#yarn-site-xml" class="headerlink" title="yarn-site.xml"></a>yarn-site.xml</h3><pre><code class="hljs xml">    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>mapreduce_shuffle<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-<span class="hljs-comment">&lt;!--以防被挖矿--&gt;</span>	
-	<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:18088<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   	 <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h4 id="hadoop-env-sh"><a href="#hadoop-env-sh" class="headerlink" title="hadoop-env.sh"></a>hadoop-env.sh</h4><pre><code class="hljs elm"><span class="hljs-title">java</span>环境变量ex<span class="hljs-keyword">port</span></code></pre>
+ 	&lt;mirror&gt;
+		&lt;id&gt;nexus-aliyun&lt;/id&gt;
+		&lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+		&lt;name&gt;Nexus aliyun&lt;/name&gt;
+		&lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+	&lt;/mirror&gt;
 
-<h2 id="7-格式化目录"><a href="#7-格式化目录" class="headerlink" title="7.格式化目录"></a>7.格式化目录</h2><pre><code class="hljs shell">hdfs namenode -format (看是否出现successfully)</code></pre>
-<h2 id="8-启动"><a href="#8-启动" class="headerlink" title="8.启动"></a>8.启动</h2><pre><code class="hljs shell">start-dfs.sh
-start-all</code></pre>
-<h2 id="9-查看hdfs"><a href="#9-查看hdfs" class="headerlink" title="9.查看hdfs"></a>9.查看hdfs</h2><pre><code class="hljs shell">hdfs dfs -ls /</code></pre>
-<h2 id="10-网页查看hdfs"><a href="#10-网页查看hdfs" class="headerlink" title="10.网页查看hdfs"></a>10.网页查看hdfs</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">50070</span>/</code></pre>
-<h2 id="11-网页查看yarn"><a href="#11-网页查看yarn" class="headerlink" title="11.网页查看yarn"></a>11.网页查看yarn</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">18088</span>/</code></pre>
+ 
+	&lt;mirror&gt;
+      &lt;id&gt;alimaven&lt;/id&gt;
+      &lt;name&gt;aliyun maven&lt;/name&gt;
+      &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;       
+    &lt;/mirror&gt;
+
+&lt;profile&gt;    
+			&lt;id&gt;jdk-1.8&lt;/id&gt;    
+			&lt;activation&gt;    
+				&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;    
+				&lt;jdk&gt;1.8&lt;/jdk&gt;    
+			&lt;/activation&gt;    
+			&lt;properties&gt;    
+				&lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;    
+				&lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;    
+				&lt;maven.compiler.compilerVersion&gt;1.8&lt;/maven.compiler.compilerVersion&gt;    
+			&lt;/properties&gt;    
+&lt;/profile&gt;</code></pre>
             </div>
             <hr>
             <div>
@@ -293,7 +261,7 @@ start-all</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/hadoop/">hadoop</a>
+                      <a class="hover-with-bg" href="/tags/maven/">maven</a>
                     
                   </div>
                 
@@ -306,9 +274,9 @@ start-all</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/29/hive03/">
+                      <a href="/2020/11/29/hue/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">hive安装部署</span>
+                        <span class="hidden-mobile">hue安装部署</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -316,8 +284,8 @@ start-all</code></pre>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/23/markdown/">
-                        <span class="hidden-mobile">markdown教程</span>
+                      <a href="/2020/11/29/hive03/">
+                        <span class="hidden-mobile">hive安装部署</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -453,7 +421,7 @@ start-all</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "hadoop伪分布式安装部署&nbsp;",
+        "maven安装部署&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

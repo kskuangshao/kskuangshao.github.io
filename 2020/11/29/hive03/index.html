@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>hadoop伪分布式安装部署 - Kskuangshao</title>
+  <title>hive安装部署 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,7 +165,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-29 14:51" pubdate>
+      <time datetime="2020-11-29 17:28" pubdate>
         2020年11月29日 下午
       </time>
     </span>
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      533 字
+      495 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      8
        分钟
     </span>
   
@@ -217,73 +217,81 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">hadoop伪分布式安装部署</h1>
+            <h1 style="display: none">hive安装部署</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="hadoop伪分布式安装部署"><a href="#hadoop伪分布式安装部署" class="headerlink" title="hadoop伪分布式安装部署"></a>hadoop伪分布式安装部署</h1><h2 id="1-wget下载-这种方式快"><a href="#1-wget下载-这种方式快" class="headerlink" title="1.wget下载(这种方式快)"></a>1.wget下载(这种方式快)</h2><pre><code class="hljs shell">wget http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz</code></pre>
-<h2 id="2-关于目录"><a href="#2-关于目录" class="headerlink" title="2.关于目录"></a>2.关于目录</h2><h3 id="1-创建文件目录"><a href="#1-创建文件目录" class="headerlink" title="1.创建文件目录"></a>1.创建文件目录</h3><pre><code class="hljs shell">[ks@JD ~]$mkdir app software sourcecode log data tmp lib</code></pre>
-<h3 id="a-解压到家目录-app"><a href="#a-解压到家目录-app" class="headerlink" title="a.解压到家目录/app"></a>a.解压到家目录/app</h3><pre><code class="hljs shell">[ks@JD software]$ tar -xzvf hadoop-2.6.0-cdh5.16.2.tar.gz -C ~/app/</code></pre>
-<h3 id="b-做软连接（方便版本更新）（注意前后）"><a href="#b-做软连接（方便版本更新）（注意前后）" class="headerlink" title="b.做软连接（方便版本更新）（注意前后）"></a>b.做软连接（方便版本更新）（注意前后）</h3><pre><code class="hljs shell">[ks@JD app]$ln -s hive-1.1.0-cdh5.16.2 hive</code></pre>
-<h2 id="3-Java环境"><a href="#3-Java环境" class="headerlink" title="3.Java环境"></a>3.Java环境</h2><pre><code class="hljs shell">/usr/java #位置必须是这样</code></pre>
-<h2 id="4-hadoop环境变量"><a href="#4-hadoop环境变量" class="headerlink" title="4.hadoop环境变量"></a>4.hadoop环境变量</h2><pre><code class="hljs shell">[ks@JD ~]$ vi .bashrc
-export HADOOP_HOME=/home/ks/app/hadoop
-export HIVE_HOME=/home/ks/app/hive
-export PATH=$&#123;HADOOP_HOME&#125;/bin:$&#123;HADOOP_HOME&#125;/sbin:$&#123;HIVE_HOME&#125;/bin:$PATH
-[ks@JD ~]$ source .bashrc 
-[ks@JD ~]$ which hdfs
-[ks@JD ~]$ which hive</code></pre>
-<p><a target="_blank" rel="noopener" href="https://hadoop.apache.org去找single/">https://hadoop.apache.org去找single</a> node cluster单节点伪分布式资料</p>
-<h2 id="5-配置ssh信任关系"><a href="#5-配置ssh信任关系" class="headerlink" title="5.配置ssh信任关系"></a>5.配置ssh信任关系</h2><pre><code class="hljs shell">家目录下输入
-<span class="hljs-meta">  $</span><span class="bash"> ssh-keygen -t rsa -P <span class="hljs-string">&#x27;&#x27;</span> -f ~/.ssh/id_rsa</span>
-<span class="hljs-meta">  $</span><span class="bash"> cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span>
-<span class="hljs-meta">  $</span><span class="bash"> chmod 0600 ~/.ssh/authorized_keys</span></code></pre>
-<h2 id="6-etl-hadoop下配置文件"><a href="#6-etl-hadoop下配置文件" class="headerlink" title="6.etl/hadoop下配置文件"></a>6.etl/hadoop下配置文件</h2><h3 id="core-site-xml"><a href="#core-site-xml" class="headerlink" title="core-site.xml"></a>core-site.xml</h3><pre><code class="hljs xml">   <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.defaultFS<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://focus:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-   <span class="hljs-comment">&lt;!--hadoop的tmp目录30天清理一次--&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.tmp.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/ks/tmp<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h3 id="hdfs-site-xml"><a href="#hdfs-site-xml" class="headerlink" title="hdfs-site.xml"></a>hdfs-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+              <h1 id="hive安装部署"><a href="#hive安装部署" class="headerlink" title="hive安装部署"></a>hive安装部署</h1><h2 id="hive-site-xml"><a href="#hive-site-xml" class="headerlink" title="hive-site.xml"></a>hive-site.xml</h2><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;</span>
+<span class="hljs-meta">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>javax.jdo.option.ConnectionURL<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>jdbc:mysql://JD:3306/hive?createDatabaseIfNotExist=true<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.replication<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-    <span class="hljs-comment">&lt;!--下面两个参数snn以focus这个localhost启动，不是0.0.0.0启动--&gt;</span>
-
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>javax.jdo.option.ConnectionDriverName<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>com.mysql.jdbc.Driver<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9868<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>javax.jdo.option.ConnectionUserName<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hive<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.secondary.https-address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:9869<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>javax.jdo.option.ConnectionPassword<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hive<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hive.metastore.warehouse.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/user/hive/warehouse<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">description</span>&gt;</span>location of default database for the warehouse<span class="hljs-tag">&lt;/<span class="hljs-name">description</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>datanucleus.autoStartMechanism<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>SchemaTable<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hive.server2.thrift.port<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>10000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hive.server2.thrift.bind.host<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>JD<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+     <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></code></pre>
-<h3 id="mapred-site-xml"><a href="#mapred-site-xml" class="headerlink" title="mapred-site.xml"></a>mapred-site.xml</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.framework.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>yarn<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+<h2 id="拷贝jdbc"><a href="#拷贝jdbc" class="headerlink" title="拷贝jdbc"></a>拷贝jdbc</h2><p>拷贝mysql-connect-jdbc.jar到hive/lib目录下</p>
+<h2 id="启动两个服务"><a href="#启动两个服务" class="headerlink" title="启动两个服务"></a>启动两个服务</h2><pre><code class="hljs angelscript"><span class="hljs-number">1.</span>metastore
+nohup hive --service metastore &gt; ~/log/metastore.log <span class="hljs-number">2</span>&gt;&amp;<span class="hljs-number">1</span> &amp;</code></pre>
+<pre><code class="hljs apache"><span class="hljs-attribute">2</span>.hiveserver<span class="hljs-number">2</span>
+<span class="hljs-attribute">nohup</span> hiveserver<span class="hljs-number">2</span> &gt; ~/log/hiveserver<span class="hljs-number">2</span>.log <span class="hljs-number">2</span>&gt;&amp;<span class="hljs-number">1</span> &amp;</code></pre>
+<pre><code class="hljs stan"><span class="hljs-number">3.</span>查看日志
+<span class="hljs-built_in">tail</span> -F ~/<span class="hljs-built_in">log</span>/hiveserver2.<span class="hljs-built_in">log</span></code></pre>
+<h2 id="修改hdfs-site-xml"><a href="#修改hdfs-site-xml" class="headerlink" title="修改hdfs-site.xml"></a>修改hdfs-site.xml</h2><p>​    加入一条配置信息，表示启用 webhdfs</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.webhdfs.enabled<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h3 id="yarn-site-xml"><a href="#yarn-site-xml" class="headerlink" title="yarn-site.xml"></a>yarn-site.xml</h3><pre><code class="hljs xml">    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>mapreduce_shuffle<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
-<span class="hljs-comment">&lt;!--以防被挖矿--&gt;</span>	
-	<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>focus:18088<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
-   	 <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
-<h4 id="hadoop-env-sh"><a href="#hadoop-env-sh" class="headerlink" title="hadoop-env.sh"></a>hadoop-env.sh</h4><pre><code class="hljs elm"><span class="hljs-title">java</span>环境变量ex<span class="hljs-keyword">port</span></code></pre>
+<h2 id="修改core-site-xml"><a href="#修改core-site-xml" class="headerlink" title="修改core-site.xml"></a>修改core-site.xml</h2><p>​    加入两条配置信息：表示设置 hadoop 的代理用户1</p>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.proxyuser.hadoop.hosts<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.proxyuser.hadoop.groups<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span></code></pre>
 
-<h2 id="7-格式化目录"><a href="#7-格式化目录" class="headerlink" title="7.格式化目录"></a>7.格式化目录</h2><pre><code class="hljs shell">hdfs namenode -format (看是否出现successfully)</code></pre>
-<h2 id="8-启动"><a href="#8-启动" class="headerlink" title="8.启动"></a>8.启动</h2><pre><code class="hljs shell">start-dfs.sh
-start-all</code></pre>
-<h2 id="9-查看hdfs"><a href="#9-查看hdfs" class="headerlink" title="9.查看hdfs"></a>9.查看hdfs</h2><pre><code class="hljs shell">hdfs dfs -ls /</code></pre>
-<h2 id="10-网页查看hdfs"><a href="#10-网页查看hdfs" class="headerlink" title="10.网页查看hdfs"></a>10.网页查看hdfs</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">50070</span>/</code></pre>
-<h2 id="11-网页查看yarn"><a href="#11-网页查看yarn" class="headerlink" title="11.网页查看yarn"></a>11.网页查看yarn</h2><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">114.67</span>.<span class="hljs-number">80.217</span>:<span class="hljs-number">18088</span>/</code></pre>
+<h2 id="beeline登录hive"><a href="#beeline登录hive" class="headerlink" title="beeline登录hive"></a>beeline登录hive</h2><pre><code class="hljs groovy">beeline
+!connect <span class="hljs-attr">jdbc:</span><span class="hljs-attr">hive2:</span><span class="hljs-comment">//JD:10000/default</span>
+username
+password</code></pre>
+<h2 id="DBeaver连接hive"><a href="#DBeaver连接hive" class="headerlink" title="DBeaver连接hive"></a>DBeaver连接hive</h2><p>全局搜索（jar包添加到一个制定目录，找不到jar怎么办）<br>cd到hadoop目录下执行：</p>
+<pre><code class="hljs routeros"><span class="hljs-builtin-name">find</span> ./ -name <span class="hljs-string">&quot;hadoop-common*&quot;</span></code></pre>
+<p>cd到hive目录下执行</p>
+<pre><code class="hljs routeros"><span class="hljs-builtin-name">find</span> ./ -name <span class="hljs-string">&#x27;hive-jdbc*&#x27;</span></code></pre>
+
+
+<p>然后搞定！</p>
+<p>可以查看一下1w端口</p>
+<pre><code class="hljs 1c">netstat -nlp<span class="hljs-string">|grep 10000 </span></code></pre>
             </div>
             <hr>
             <div>
@@ -293,7 +301,7 @@ start-all</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/hadoop/">hadoop</a>
+                      <a class="hover-with-bg" href="/tags/hive/">hive</a>
                     
                   </div>
                 
@@ -306,9 +314,9 @@ start-all</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/11/29/hive03/">
+                      <a href="/2020/11/29/maven01/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">hive安装部署</span>
+                        <span class="hidden-mobile">maven安装部署</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -316,8 +324,8 @@ start-all</code></pre>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/11/23/markdown/">
-                        <span class="hidden-mobile">markdown教程</span>
+                      <a href="/2020/11/29/hadoop01/">
+                        <span class="hidden-mobile">hadoop伪分布式安装部署</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -453,7 +461,7 @@ start-all</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "hadoop伪分布式安装部署&nbsp;",
+        "hive安装部署&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
