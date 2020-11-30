@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="ks de blog">
+  <meta name="author" content="kuangshao">
+  <meta name="keywords" content="">
+  <title>关于hadoop的基本知识 - Kskuangshao</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>狂少的BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/picture/back.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-01 02:06" pubdate>
+        2020年12月1日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      43
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">关于hadoop的基本知识</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="关于cdh-hadoop"><a href="#关于cdh-hadoop" class="headerlink" title="关于cdh-hadoop"></a>关于cdh-hadoop</h1><pre><code>apache hadoop软件：
+1.x 基本不用 6-7年左右的项目了
+2.x 企业主流 CDH5.X系列
+3.x 尝试使用 CDH6.X系列</code></pre>
+<p>下载</p>
+<p><a target="_blank" rel="noopener" href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz</a></p>
+<p>更新日志</p>
+<p>&lt;<a target="_blank" rel="noopener" href="http://archive.cloudera.com/cdh5/cdh/5/">http://archive.cloudera.com/cdh5/cdh/5/</a><br>hadoop-2.6.0-cdh5.16.2-changes.log&gt;</p>
+<h2 id="关于hadoop"><a href="#关于hadoop" class="headerlink" title="关于hadoop"></a>关于hadoop</h2><ol>
+<li>hdfs文件系统提供存储</li>
+<li>MR计算</li>
+<li>yarn资源（内存+vcore）+作业调度</li>
+</ol>
+<h2 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h2><pre><code>local(standalone) Mode 本地模式
+Pseudo-Distrbuted Mode 伪分布式模式
+Fully-Distributed Mode 分布式模式 集群模式 生产</code></pre>
+<h2 id="关于nn-dn-snn"><a href="#关于nn-dn-snn" class="headerlink" title="关于nn,dn,snn"></a>关于nn,dn,snn</h2><pre><code class="hljs properties"><span class="hljs-attr">namenode</span>    <span class="hljs-string">名称节点    老大    读写请求先经过它    主节点</span>
+<span class="hljs-attr">datanode</span>    <span class="hljs-string">数据节点    小弟    存储数据检索数据    从节点</span>
+<span class="hljs-attr">secondrynn</span>  <span class="hljs-string">第二名称节点 老二    h+1</span></code></pre>
+
+<p>大数据组件基本都是主从架构，唯独hbase（读写请求不经过老大master）</p>
+<h1 id="关于hdfs，yarn，mr"><a href="#关于hdfs，yarn，mr" class="headerlink" title="关于hdfs，yarn，mr"></a>关于hdfs，yarn，mr</h1><h2 id="namenode"><a href="#namenode" class="headerlink" title="namenode"></a>namenode</h2><pre><code class="hljs elm">存储：文件系统的命名空间
+<span class="hljs-title">a</span>.文件名称
+<span class="hljs-title">b</span>.文件的目录结构
+<span class="hljs-title">c</span>.文件的属性，权限，创建时间，副本数
+<span class="hljs-title">d</span>.文件对应被切割为哪些数据块<span class="hljs-comment">--》分布到哪些节点上</span>
+<span class="hljs-title">blockmap</span>当然在nn节点不会持久化，存储这种映射关系，是通过启动集群和运行时，dn会定期发送blockre<span class="hljs-keyword">port</span>给nn，一次nn在内存中动态维护这种映射关系
+
+作用：
+管理系统文件命名空间。维护文件系统树的所有文件和文件夹
+这些信息以两个文件形式永久保存在磁盘上(镜像文件fsimage,编辑日志文件editlog)
+
+<span class="hljs-title">tmp</span>/dfs/name/current</code></pre>
+
+<h2 id="datanode"><a href="#datanode" class="headerlink" title="datanode"></a>datanode</h2><pre><code class="hljs stylus">存储：数据块，数据块校验，与nn通信：
+
+<span class="hljs-selector-tag">a</span>.每隔<span class="hljs-number">3</span>秒发送心跳包给nn，我还活着 dfs<span class="hljs-selector-class">.heardbeat</span>.interval
+<span class="hljs-selector-tag">b</span>.每隔一定的时间发送一次blockreport dfs<span class="hljs-selector-class">.blockreport</span><span class="hljs-selector-class">.intervalMse</span>    c <span class="hljs-number">2160000ms</span>=<span class="hljs-number">6</span>h
+dfs<span class="hljs-selector-class">.datanode</span><span class="hljs-selector-class">.directoryscan</span><span class="hljs-selector-class">.interval</span> <span class="hljs-number">2160000ms</span>=<span class="hljs-number">6</span>h</code></pre>
+
+<h2 id="secondaryNamenode"><a href="#secondaryNamenode" class="headerlink" title="secondaryNamenode"></a>secondaryNamenode</h2><pre><code>存储：fsimage+editlog
+
+作用：（拷贝fsimage和edit两个文件到本地）定期合并fsimage+editlo    g文件作为新的fsimage，推送给nn，简称为checkpoint 检查点，简单来说，nn在某一个时间挂了，通过snn的备份文件恢复
+
+局限性：1h内的内容会丢失，不能百分之一百恢复数据
+
+如何解决局限性问题：HDFS HA高可用部署，两个NN，不要SNN</code></pre>
+<p>​<br>​    模拟场景：<br>​    James Anthony Wade Paul 记录在fsimage1<br>​    </p>
+<pre><code>新增Kobe Carter 记录在edit1
+
+checkpoint1:fsimage1+edit1 合并成 fsimage2
+
+1h later fsimage2 推送给 nn
+
+fsimage2
+Mcgrady Iverson 记录在edit2
+checkpoint：fsimage2 + edit2 合并成fsimage3
+
+总结：简单来说，fsimage镜像文件存放着历史的信息+edit编辑日志文件存放更新的信息 1h 合并成新的fsimage（并更新名称），edit置空，周而复始。</code></pre>
+<h2 id="副本放置策略"><a href="#副本放置策略" class="headerlink" title="副本放置策略"></a>副本放置策略</h2><ol>
+<li>副本一：优先放置上传节点，其次放置本机架的负载较小的节点</li>
+<li>副本二：放置副本一不同机架的节点</li>
+<li>副本三：放置副本二相同机架不同节点</li>
+</ol>
+<h2 id="hdfs读写流程"><a href="#hdfs读写流程" class="headerlink" title="hdfs读写流程"></a>hdfs读写流程</h2><h3 id="hdfs写流程"><a href="#hdfs写流程" class="headerlink" title="hdfs写流程"></a>hdfs写流程</h3><pre><code class="hljs shell">hadoop fs -put xxx.log /</code></pre>
+
+<ol>
+<li>Client调用FileSystem.create(filePath)方法，与NN进行【rpc】通信，check是否存在权限创建，不ok返回一个错误信息；ok创建一个新的文件，不关联任何的block块，返回一个FSDataOutputStream对象；</li>
+<li>Client调用FSDataOutputStream对象的write（）方法，现将第一个快的第一个副本写到第一个DN，第一个副本写完，传输给第二个DN，第二个副本写完；传输给第三个DN，第三个副本写完。返回一个ackpacket确认包给第二个DN，第二个DN接收到第三个ack packet确认包加上自身ok，返回给第一个ack packet确认包，加上自身ok，第一个同理，最终返回给FSDataOutputStream对象 ,标志着三个副本写完；</li>
+<li>当向文件写入数据完成后，Client调用FSDataOutputStream.close()方法，关闭输出流；</li>
+<li>再调用FileSystem.complete()方法，告诉NN该文件写入成功。</li>
+</ol>
+<h3 id="hdfs读流程"><a href="#hdfs读流程" class="headerlink" title="hdfs读流程"></a>hdfs读流程</h3><pre><code class="hljs shell">hadoop fs -text /xxx.log</code></pre>
+
+<ol>
+<li>Client调用FileSystem.open(filePath)方法，与NN进行【rpc】通信，返回该文件的部分或者全部的block块的列表，也就是返回FSDatainputStream对象；</li>
+<li>Client端调用FSDatainputStream的read()方法<pre><code>a.与第一个块最近的DN进行read，读取完成后，会check，ok关闭与当前DN的通信，不ok，会记录失败的块+DN信息，下次不会再读取，那么回去该块的第二个DN地址读取。
+b.然后去第二个块最近的DN上通信读取，check后关闭通信。
+c.假如block列表读取完成后，文件还未结束，就再次FileSystem会从NN获取该文件的下一个批次的block列表。（感觉解释连续的数据流，对于客户端操作是透明无感知的）</code></pre>
+</li>
+<li>Cient调用FSDatainputStream.close()方法，关闭输入流。</li>
+</ol>
+<h2 id="hdfs回收站"><a href="#hdfs回收站" class="headerlink" title="hdfs回收站"></a>hdfs回收站</h2><pre><code class="hljs xml">​```
+core-sitem.xml
+    <span class="hljs-comment">&lt;!--回收站配置如果是0，代表回收站不启用--&gt;</span>
+    <span class="hljs-comment">&lt;!--分钟单位，10080代表7天--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.trash.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+       <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>10080<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+​```</code></pre>
+
+<p>注意：</p>
+<ol>
+<li>切记检查生产环境是否开启回收站，CDH默认是开启的</li>
+<li>若开启回收站，慎用-skipTrash</li>
+<li>回收站默认保留7天</li>
+</ol>
+<h2 id="dfsadmin"><a href="#dfsadmin" class="headerlink" title="dfsadmin"></a>dfsadmin</h2><p>如果NN log显示，进入safe mode，正常手动让其离开安全模式(很少做)。</p>
+<pre><code class="hljs shell">[hadoop@JD hadoop]$ hdfs dfsadmin -safemode enter
+20/06/29 12:45:53 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Safe mode is ON
+[hadoop@JD hadoop]$ hdfs dfsadmin -safemode leave
+20/06/29 12:49:41 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Safe mode is OFF</code></pre>
+
+<p>注意：安全模式不能读写</p>
+<h2 id="hdfs-fsck检查文件块损坏"><a href="#hdfs-fsck检查文件块损坏" class="headerlink" title="hdfs fsck检查文件块损坏"></a>hdfs fsck检查文件块损坏</h2><pre><code class="hljs shell">[hadoop@JD hadoop]$ hdfs fsck /
+20/06/29 12:53:55 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Connecting to namenode via http://JD:50070/fsck?ugi=hadoop&amp;path=%2F
+FSCK started by hadoop (auth:SIMPLE) from /192.168.0.3 for path / at Mon Jun 29 12:53:56 CST 2020
+........Status: HEALTHY
+ Total size:  603799 B
+ Total dirs:  33
+ Total files: 8
+ Total symlinks:    0
+ Total blocks (validated):  8 (avg. block size 75474 B)
+ Minimally replicated blocks: 8 (100.0 %)
+ Over-replicated blocks:  0 (0.0 %)
+ Under-replicated blocks: 0 (0.0 %)
+ Mis-replicated blocks:   0 (0.0 %)
+ Default replication factor:  1
+ Average block replication: 1.0
+ Corrupt blocks:    0 #!!!损坏的块
+ Missing replicas:    0 (0.0 %) #！！！丢失的块
+ Number of data-nodes:    1
+ Number of racks:   1
+FSCK ended at Mon Jun 29 12:53:56 CST 2020 in 13 milliseconds
+
+
+The filesystem under path &#x27;/&#x27; is HEALTHY
+
+
+</code></pre>
+
+<h2 id="各个dn节点数据均衡"><a href="#各个dn节点数据均衡" class="headerlink" title="各个dn节点数据均衡"></a>各个dn节点数据均衡</h2><p>为什么各个DN的数据量不一样，取决于副本策略。</p>
+<pre><code class="hljs shell">./start-balancer.sh</code></pre>
+
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">脚本的主要执行命令</span>
+<span class="hljs-meta">#</span><span class="bash"> Start balancer daemon.</span>
+
+&quot;$HADOOP_PREFIX&quot;/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script &quot;$bin&quot;/hdfs start balancer $@</code></pre>
+
+<p>注意：</p>
+<ol>
+<li>所有节点的磁盘used与集群的平均used之差要小于这个阈值</li>
+<li>dfs.datanode.balance.bandwidthPerSec 10m</li>
+<li>可以crontab每天调度start-balancer.sh脚本，每天调度数据平衡 也称为毛刺修正</li>
+</ol>
+<h2 id="一个dn节点多个磁盘的数据均衡"><a href="#一个dn节点多个磁盘的数据均衡" class="headerlink" title="一个dn节点多个磁盘的数据均衡"></a>一个dn节点多个磁盘的数据均衡</h2><pre><code class="hljs shell">./start-balancer.sh -threshold 5</code></pre>
+
+<p>注意：5代表上下不超过5个</p>
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">模拟场景</span>
+df -h
+/data01 90%
+/data02 60%
+/data03 80%
+/data04 0%
+
+dfs.disk.balancer.enable must be set to true in hdfs-site.xml
+hdfs disbalancer -plan JD #生成执行计划的json文件 JD.plan.json
+hdfs disbalancer -execute JD.plan.json #执行
+hdfs disbalancer -query JD #查询状态</code></pre>
+
+<h3 id="什么时候执行或调度执行"><a href="#什么时候执行或调度执行" class="headerlink" title="什么时候执行或调度执行"></a>什么时候执行或调度执行</h3><ol>
+<li>加入一块新的磁盘</li>
+<li>监控服务器的磁盘剩余空间小于阈值10%，手动执行</li>
+</ol>
+<pre><code class="hljs xml">dfs.datanode.data.dir    /data01,/data02,/data03,/data04</code></pre>
+
+<ol start="3">
+<li>重启生效</li>
+</ol>
+<h2 id="为什么dn生产上多个物理目录"><a href="#为什么dn生产上多个物理目录" class="headerlink" title="为什么dn生产上多个物理目录"></a>为什么dn生产上多个物理目录</h2><pre><code class="hljs shell">/data01 disk1
+/data02 disk2
+/data03 disk3</code></pre>
+
+<ol>
+<li>为了高效率写，高效率读</li>
+<li>提前规划好2-3年数据存储量，避免后期加磁盘维护的工作量</li>
+</ol>
+<h2 id="MR2-X架构设计"><a href="#MR2-X架构设计" class="headerlink" title="MR2.X架构设计"></a>MR2.X架构设计</h2><p>MR on yarn流程，也叫mr提交应用job</p>
+<ol>
+<li>applicaions Manager应用程序管理器</li>
+<li>resource scheduler 资源memeory+cpu调度器</li>
+</ol>
+<pre><code class="hljs xl"><span class="hljs-function"><span class="hljs-title">resourceManager</span> --管理--&gt;</span> nodeManager （rm通过管理dn，起到对资源的管理）
+Driver（main方法）
+<span class="hljs-function"><span class="hljs-title">resourceManager</span> --&gt;</span> <span class="hljs-function"><span class="hljs-title">am</span> --&gt;</span> diver(am起到解耦的作用)driver可变，计算框架可插拔
+container类似于虚拟机，让内部task和外部资源没有耦合性</code></pre>
+
+
+
+<p><img src="/2020/12/01/hadoop02/kskuangshao/Downloads/%E5%9B%BE%E7%89%87%E8%B5%84%E6%96%99/image_1ekajvkodgaj1ioiftk1jpl1nlp9.png" srcset="/img/loading.gif" alt="image_1ekajvkodgaj1ioiftk1jpl1nlp9"></p>
+<p><img src="/2020/12/01/hadoop02/kskuangshao/Downloads/%E5%9B%BE%E7%89%87%E8%B5%84%E6%96%99/image_1ekal9ke1mf41bka4j18lar1km.png" srcset="/img/loading.gif" alt="image_1ekal9ke1mf41bka4j18lar1km"></p>
+<h3 id="container概念"><a href="#container概念" class="headerlink" title="container概念"></a>container概念</h3><p>将内存和cpu装成一个小房子</p>
+<p>container是属于nm节点上，专门用来运行mr，spark等计算的最小节点；</p>
+<ol>
+<li>用户向Yarn提交应用程序（job，app location）（jar文件，sql），其中包裹ApplicationMaster程序，启动ApplicationMaster的主程序；</li>
+<li>RM为该job分配第一个container，运行job的ApplicationMaster</li>
+<li>App Master首先向Application Manager注册，这样就可以在RM Web界面查询这个job的界面；</li>
+<li>App Master采用轮询的方式（通过rpc协议）向RM申请和领取资源；</li>
+<li>一旦App Master拿到资源，就与对应的NM通信；</li>
+<li>NM为任务设置好运行环境（jar包代码），将任务启动命令写在一个脚本里，并通过脚本启动task；</li>
+<li>各个task通过rpc协议向App Master回报自己的进度，以此让App Master随时掌握各个任务的运行状态，从而task运行失败重启任务；</li>
+<li>App Master向Applications 注销且关闭自己。</li>
+</ol>
+<h3 id="生产如何调优container参数？"><a href="#生产如何调优container参数？" class="headerlink" title="生产如何调优container参数？"></a>生产如何调优container参数？</h3><p>假设128G 16核物理core</p>
+<ol>
+<li>装完centos消耗1G</li>
+<li>系统预留15%-20%的内存，防止linux的oom机制发生（128*20%+1=26G）</li>
+<li>nn，dn本身进程4g，2g，剩余96G</li>
+</ol>
+<pre><code class="hljs shell">yarn.nodemanager.resource.memory-mb=96G
+<span class="hljs-meta">#</span><span class="bash">container总内存</span>
+yarn.schedular.minimum-allocation-mb 1024 
+<span class="hljs-meta">#</span><span class="bash">每个container最小内存</span>
+<span class="hljs-meta">#</span><span class="bash">极限情况下，只有96个container，内存1G</span>
+yarn.schedular.maximum-allocation-mb 8192
+<span class="hljs-meta">#</span><span class="bash">每个container最大内存 </span>
+<span class="hljs-meta">#</span><span class="bash">极限情况下，只有1个container，内存96G</span></code></pre>
+
+<p>注意：container的内存会自动增加，默认1G递增</p>
+<h3 id="container虚拟核vcore"><a href="#container虚拟核vcore" class="headerlink" title="container虚拟核vcore"></a>container虚拟核vcore</h3><ol>
+<li>yarn自己引入的概念，设计的初衷是考虑不同节点的cpu性能不一样，每个cpu的计算能力不一样，比如某个物理cpu是另外一个物理cpu的两倍，这时，通过设置第一个物理cpu的虚拟core来弥补这种差异。（早期）</li>
+<li>物理核:vcore = 1:2 （现在）</li>
+</ol>
+<pre><code class="hljs shell">yarn.nodemanager.resource.cpu-vocres 32
+yarn.scheduler.minimum-allocation-vcores 1 #极限情况下，只有32个container
+yarn.scheduler.maximum-allocation-vcores 32 #极限情况下，只有一个container
+yarn.scheduler.maximum-allocation-vcores 4 #根据官方建议，不超过5个，我们设置最大4个
+<span class="hljs-meta">#</span><span class="bash">最终container：1-4个vcore</span>
+<span class="hljs-meta">#</span><span class="bash">那么极限情况有8个container</span></code></pre>
+
+<h2 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h2><pre><code>FIFO 先进先出
+Capacity 计算（专门设置一个队列来运行小任务）
+Fair 公平</code></pre>
+<p>apache默认是计算，CDH默认是公平（web ui schedular可查看）</p>
+<p>动态资源池+放置规则 CDH Fair</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/itboys/p/11379018.html">https://www.cnblogs.com/itboys/p/11379018.html</a></p>
+<h3 id="map端的task个数是谁来决定的？"><a href="#map端的task个数是谁来决定的？" class="headerlink" title="map端的task个数是谁来决定的？"></a>map端的task个数是谁来决定的？</h3><p>map task个数 和 文件的个数有关（答对了80%）</p>
+<p>和block块有关系</p>
+<h3 id="文件，压缩格式"><a href="#文件，压缩格式" class="headerlink" title="文件，压缩格式"></a>文件，压缩格式</h3><ol>
+<li>文件格式：textFile，orc，parquet，rcfile</li>
+<li>压缩格式：gzip，snappy，lzo</li>
+<li>hive：orc/parquet + bzip2</li>
+<li>Hbase：hfile + snappy</li>
+</ol>
+<h3 id="shuffle属于map还是reduce？"><a href="#shuffle属于map还是reduce？" class="headerlink" title="shuffle属于map还是reduce？"></a>shuffle属于map还是reduce？</h3><ol>
+<li>属于reduce阶段，shuffle为了reduce而做</li>
+<li>map的输出作为reduce的输入的过程就是shuffle（洗牌），这个是mapreduce优化的重点地方</li>
+</ol>
+<h3 id="yarn的常用命令"><a href="#yarn的常用命令" class="headerlink" title="yarn的常用命令"></a>yarn的常用命令</h3><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">查询yarn应用清单</span>
+yarn application -list|grep xxx 
+
+<span class="hljs-meta">#</span><span class="bash">删除某个已经提交yarn的应用程序</span>
+yarn application -kill &lt;application id&gt; 
+
+<span class="hljs-meta">#</span><span class="bash">查看yarn中应用程序的<span class="hljs-built_in">log</span></span>
+yarn logs -application id/container id
+
+<span class="hljs-meta">#</span><span class="bash">查看app状态</span>
+yarn applicationattempt -list application_1528080031923_0064
+
+<span class="hljs-meta">#</span><span class="bash">查看队列的使用情况</span>
+yarn queue -status root.users.xxxx
+
+<span class="hljs-meta">#</span><span class="bash">转移队列</span>
+yarn application -movetoqueue application_1528080031923_0067 -queue root.users.xxx
+
+
+</code></pre>
+
+
+
+<h2 id="如何查看端口号"><a href="#如何查看端口号" class="headerlink" title="如何查看端口号"></a>如何查看端口号</h2><ol>
+<li>jps找到pid</li>
+<li>netstat -npl|grep pid查看端口号</li>
+</ol>
+<pre><code class="hljs shell">[hadoop@JD ~]$ jps
+21761 SecondaryNameNode
+25825 Jps
+21442 NameNode
+21924 ResourceManager
+23668 RunJar
+27669 RunJar
+22150 NodeManager
+21580 DataNode
+[hadoop@JD ~]$ netstat -npl|grep 21924
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp6       0      0 192.168.0.3:18088       :::*                    LISTEN      21924/java
+tcp6       0      0 :::8030                 :::*                    LISTEN      21924/java
+tcp6       0      0 :::8031                 :::*                    LISTEN      21924/java
+tcp6       0      0 :::8032                 :::*                    LISTEN      21924/java
+tcp6       0      0 :::8033                 :::*                    LISTEN      21924/java</code></pre>
+
+<h1 id="现在的大数据"><a href="#现在的大数据" class="headerlink" title="现在的大数据"></a>现在的大数据</h1><ol>
+<li>存储：hdfs文件系统，hive hbase kudu Cassandra</li>
+<li>计算：MR Hivesql Spark Flink</li>
+<li>资源+作业调度：Yarn</li>
+</ol>
+<h1 id="hadoop常见问题"><a href="#hadoop常见问题" class="headerlink" title="hadoop常见问题"></a>hadoop常见问题</h1><h2 id="pom依赖"><a href="#pom依赖" class="headerlink" title="pom依赖"></a>pom依赖</h2><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">repository</span>&gt;</span>
+    <span class="hljs-comment">&lt;!--Cloudera仓库--&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>cloudera<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">url</span>&gt;</span>https://repository.cloudera.com/artifactory/cloudera-repos/<span class="hljs-tag">&lt;/<span class="hljs-name">url</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">repository</span>&gt;</span>
+
+//在properties标签里添加
+<span class="hljs-tag">&lt;<span class="hljs-name">hadoop.verion</span>&gt;</span>2.6.2-cdh5.16.2<span class="hljs-tag">&lt;/<span class="hljs-name">hadoop.verion</span>&gt;</span>
+//在depenece里添加
+<span class="hljs-comment">&lt;!--hadoop依赖--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.hadoop<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hadoop-client<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;hadoop.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+
+<h2 id="datanode没起来"><a href="#datanode没起来" class="headerlink" title="datanode没起来"></a>datanode没起来</h2><pre><code class="hljs gradle">找到tmp文件夹,tmp文件夹下dfs<span class="hljs-regexp">/name（data）/</span>crrent/VERSION
+#<span class="hljs-regexp">/home/</span>hadoop<span class="hljs-regexp">/tmp/</span>dfs/
+VERSION里面clusterID修改成和namemode一致的重新启动
+#clusterID=CID-<span class="hljs-number">0</span>baa1fb4-<span class="hljs-number">6704</span>-<span class="hljs-number">42</span>df-be36-<span class="hljs-number">2845</span>d0790ae6</code></pre>
+
+<h2 id="windows下报错"><a href="#windows下报错" class="headerlink" title="windows下报错"></a>windows下报错</h2><pre><code class="hljs awk">java.io.IOException: Could not locate executable null\bin\winutils.exe <span class="hljs-keyword">in</span> the Hadoop binaries
+解决办法：
+下载winutils.exe(http:<span class="hljs-regexp">//</span>public-repo-<span class="hljs-number">1</span>.hortonworks.com<span class="hljs-regexp">/hdp-win-alpha/</span>winutils.exe)
+创建一个目录，比如C:\winutils\bin
+将winutils.exe放入上述创建好的目录下
+设置HADOOP_HOME=C:\winutils环境变量，并将其放入PATH变量中，例如%HADOOP_HOME%\bin
+或者直接在程序中加入System.setProperty(<span class="hljs-string">&quot;hadoop.home.dir&quot;</span>, <span class="hljs-string">&quot;full path to the folder with winutils&quot;</span>);
+java.lang.UnsatisfiedLinkError: org.apache.hadoop.io.nativeio.NativeIO<span class="hljs-variable">$Windows</span>.access0(Ljava<span class="hljs-regexp">/lang/</span>String;I)Z
+解决办法：
+下载winutils.exe和hadoop.dll(https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/steveloughran/</span>winutils<span class="hljs-regexp">/tree/m</span>aster<span class="hljs-regexp">/hadoop-2.7.1/</span>bin)
+放这两个在%HADOOP_HOME%\bin下，同时hadoop.dll也放在C:\Windows\System32目录下</code></pre>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hadoop/">hadoop</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/12/01/datalake/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">datalake认识</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/01/spark02/">
+                        <span class="hidden-mobile">spark参数设置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "关于hadoop的基本知识&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

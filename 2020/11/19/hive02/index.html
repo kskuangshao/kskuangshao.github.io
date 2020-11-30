@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.3k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      16
+      19
        分钟
     </span>
   
@@ -375,6 +375,24 @@ JVM抛出 java.lang.OutOfMemoryError: GC overhead limit exceeded 错误就是发
 <span class="hljs-attribute">spark</span>.default.parallelism = num-executors*executor-cores*<span class="hljs-number">2</span>-<span class="hljs-number">3</span> 并行度
 <span class="hljs-attribute">spark</span>.storage.memoryFraction executor中用于持久化的比例，默认<span class="hljs-number">0</span>.<span class="hljs-number">6</span>
 <span class="hljs-attribute">spark</span>.shuffle.memoryFraction 用来进行shuffle(read)操作的内存比例，默认<span class="hljs-number">0</span>.<span class="hljs-number">2</span></code></pre>
+
+<h4 id="sparksql出现的问题，hdfs-dfs-distcp方式拷贝hdfs的表元数据"><a href="#sparksql出现的问题，hdfs-dfs-distcp方式拷贝hdfs的表元数据" class="headerlink" title="sparksql出现的问题，hdfs dfs -distcp方式拷贝hdfs的表元数据"></a>sparksql出现的问题，hdfs dfs -distcp方式拷贝hdfs的表元数据</h4><pre><code class="hljs shell">Caused by: org.apache.hadoop.mapred.InvalidInputException: Input path does not exist: hdfs://nameservice1/DATA/DWS/mirror_dim_arvato_sys_tier_type/pt_brand_code=1-ATDHL/pt_sum_date=20201120003925
+
+<span class="hljs-meta">#</span><span class="bash">我们这里查一下此表的路径</span>
+
+<span class="hljs-meta">#</span><span class="bash">拷贝之后的分区路径：</span>
+drwxrwx--x+  - hive hive          0 2020-11-24 22:36 hdfs://nameservice1/DATA/DWS/mirror_dim_arvato_sys_tier_type/pt_brand_code=1-ATDHL/pt_sum_date=20201124003823
+
+<span class="hljs-meta">#</span><span class="bash">拷贝之前的分区路径：</span>
+drwxrwx--x+  - hive hive          0 2020-12-01 00:42 hdfs://nameservice1/DATA/DWS/dim_arvato_sys_tier_type/pt_brand_code=1-ATDHL/pt_sum_date=20201201003742
+<span class="hljs-meta">#</span><span class="bash">因为distcp全量，发现此表的分区的值已经变了，难怪sparksql报错</span>
+
+<span class="hljs-meta">#</span><span class="bash">解决方式1：忽略损坏分区</span>
+<span class="hljs-meta">#</span><span class="bash">sparksql需要添加参数：</span>
+set spark.sql.hive.verifyPartitionPath=true;
+hive则不用
+
+<span class="hljs-meta">#</span><span class="bash">思考下为什么，有没有更好的方式解决；</span></code></pre>
 
 
             </div>

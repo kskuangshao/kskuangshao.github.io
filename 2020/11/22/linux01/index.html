@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      824 字
+      2.1k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      31
        分钟
     </span>
   
@@ -220,7 +220,18 @@
             <h1 style="display: none">新虚拟机、服务器搭建、常用命令</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="新创建虚拟机准备工作"><a href="#新创建虚拟机准备工作" class="headerlink" title="新创建虚拟机准备工作"></a>新创建虚拟机准备工作</h1><h2 id="卸载自带的openjdk"><a href="#卸载自带的openjdk" class="headerlink" title="卸载自带的openjdk"></a>卸载自带的openjdk</h2><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">查看java版本</span>
+              <h1 id="新创建虚拟机准备工作"><a href="#新创建虚拟机准备工作" class="headerlink" title="新创建虚拟机准备工作"></a>新创建虚拟机准备工作</h1><h2 id="创建用户目录"><a href="#创建用户目录" class="headerlink" title="创建用户目录"></a>创建用户目录</h2><pre><code class="hljs shell">[hadoop@JD ~]$ mkdir app software sourcecode log tmp data lib
+[hadoop@JD ~]$ ll
+total 0
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 app #解压的文件 软连接
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 data #数据
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 lib #第三方jar
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 log #日志文件夹
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 software #压缩包
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 sourcecode #源代码
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 tmp #临时文件夹？？lunix本身自带tmp目录，为什么要自己创建目录呢？？生产上的大坑。</code></pre>
+
+<h2 id="卸载自带的openjdk"><a href="#卸载自带的openjdk" class="headerlink" title="卸载自带的openjdk"></a>卸载自带的openjdk</h2><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">查看java版本</span>
 [root@hadoop001 software]# java -version
 java version &quot;1.7.0_51&quot;
 OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)
@@ -358,6 +369,149 @@ chown -R 用户：用户组 文件夹/文件路径</code></pre>
 
 <p>历史记录</p>
 <pre><code class="hljs shell">history</code></pre>
+
+<h1 id="ERROR如何定位"><a href="#ERROR如何定位" class="headerlink" title="ERROR如何定位"></a>ERROR如何定位</h1><pre><code class="hljs routeros">a.文件内容小，下载到windows，工具打开搜索ERROR
+b.文件内容大</code></pre>
+
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#ERROR前10行</span></span>
+cat xxx.log|grep -A 10 ERROR
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#ERROR后10行 </span></span>
+cat xxx.log|grep -B 10 ERROR
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#ERROR前后各10行（***）</span></span>
+cat xxx.log|grep -C 10 ERROR</code></pre>
+
+<h1 id="实时查看文件"><a href="#实时查看文件" class="headerlink" title="实时查看文件"></a>实时查看文件</h1><pre><code class="hljs shell">tail -f ks.log
+tail -F ks.log
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#-F = -f + retry,在生产上flume也要用-F</span></span></code></pre>
+
+<h1 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h1><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#全局</span></span>
+vim /etc/profile
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#个人，优先bashrc，远程ssh去连接时，bashrc自动加载生效</span></span>
+vim ~/.bash_profile
+vim ~/.bashrc
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#记得生效</span></span>
+source xxx</code></pre>
+
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">删除会提示</span>
+rm xxx.log
+<span class="hljs-meta">#</span><span class="bash">直接删除</span>
+rm -r xxx.log
+<span class="hljs-meta">#</span><span class="bash">直接删除文件夹</span>
+rm -rf xxx
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment">#静止使用</span></span>
+rm -rf /跑路</code></pre>
+
+<h1 id="注意可能会出现如下情况"><a href="#注意可能会出现如下情况" class="headerlink" title="注意可能会出现如下情况"></a>注意可能会出现如下情况</h1><pre><code class="hljs shell">vim /etc/passwd</code></pre>
+
+<h2 id="无法切换到此用户"><a href="#无法切换到此用户" class="headerlink" title="无法切换到此用户"></a>无法切换到此用户</h2><pre><code class="hljs shell">rain:x:1002:1001::/home/rain:/sbin/nologin
+rain:x:1002:1001::/home/rain:/bin/false</code></pre>
+
+<h2 id="可以切换到此用户"><a href="#可以切换到此用户" class="headerlink" title="可以切换到此用户"></a>可以切换到此用户</h2><pre><code class="hljs shell">rain:x:1002:1001::/home/rain:/bin/bash
+<span class="hljs-meta">#</span><span class="bash">若切换不过去，改为/bin/bash</span></code></pre>
+
+<h1 id="关于文件的权限"><a href="#关于文件的权限" class="headerlink" title="关于文件的权限"></a>关于文件的权限</h1><pre><code class="hljs yaml"><span class="hljs-string">第一个字母：d文件夹</span> <span class="hljs-string">-文件</span> <span class="hljs-string">l连接</span>
+<span class="hljs-string">r：读</span> <span class="hljs-number">4</span>
+<span class="hljs-string">w：写</span> <span class="hljs-number">2</span>
+<span class="hljs-string">x：执行</span> <span class="hljs-number">1</span>
+
+<span class="hljs-string">rwx：第一组：代表文件或者文件夹的用户</span>
+<span class="hljs-string">rwx：第二组：代表文件或文件夹的用户组</span>
+<span class="hljs-string">r-x：第三组：代表其他组的所属用户</span>
+
+<span class="hljs-string">chmod</span> <span class="hljs-number">777</span> <span class="hljs-comment">#任意用户用户组 读写执行 权限</span></code></pre>
+
+<h1 id="swp文件"><a href="#swp文件" class="headerlink" title="swp文件"></a>swp文件</h1><pre><code class="hljs shell">编辑失败会产生swp文件，删除后再编辑</code></pre>
+
+<h1 id="清空文件内容"><a href="#清空文件内容" class="headerlink" title="清空文件内容"></a>清空文件内容</h1><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">完美</span>
+cat /dev/null &gt; xxx.log
+<span class="hljs-meta">#</span><span class="bash">不建议</span>
+echo &#x27;&#x27; &gt; xxx.log
+<span class="hljs-meta">#</span><span class="bash">vim模式</span>
+gg+dG</code></pre>
+
+<h1 id="vim模式"><a href="#vim模式" class="headerlink" title="vim模式"></a>vim模式</h1><h2 id="命令行常见的快捷键"><a href="#命令行常见的快捷键" class="headerlink" title="命令行常见的快捷键"></a>命令行常见的快捷键</h2><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">删除当前行</span>
+dd
+<span class="hljs-meta">#</span><span class="bash">删除光标一下的所有行</span>
+dG
+<span class="hljs-meta">#</span><span class="bash">删除光标一下的n行</span>
+ndd
+<span class="hljs-meta">#</span><span class="bash">跳转第一行的第一个字母</span>
+gg
+<span class="hljs-meta">#</span><span class="bash">跳转到最后一行的第一个字母</span>
+G
+<span class="hljs-meta">#</span><span class="bash">跳转到行尾</span>
+shift+$</code></pre>
+
+<h1 id="系统命令（硬盘，内存，负载）"><a href="#系统命令（硬盘，内存，负载）" class="headerlink" title="系统命令（硬盘，内存，负载）"></a>系统命令（硬盘，内存，负载）</h1><h2 id="查看硬盘"><a href="#查看硬盘" class="headerlink" title="查看硬盘"></a>查看硬盘</h2><pre><code class="hljs shell">df -h
+文件系统        容量  已用  可用 已用% 挂载点
+/dev/vda1        40G  6.5G   34G   17% /
+/dev/vdb1        40G  6.5G   34G   data01数据盘 /
+/dev/vdb2        40G  6.5G   34G   data02数据盘 /
+/dev/vdb3        40G  6.5G   34G   data03数据盘 /
+/dev/vdb4        40G  6.5G   34G   data04数据盘 /
+devtmpfs        7.8G     0  7.8G    0% /dev
+tmpfs           7.8G   16K  7.8G    1% /dev/shm
+tmpfs           7.8G   26M  7.8G    1% /run
+tmpfs           7.8G     0  7.8G    0% /sys/fs/cgroup
+tmpfs           1.6G     0  1.6G    0% /run/user/</code></pre>
+
+<h2 id="查看内存"><a href="#查看内存" class="headerlink" title="查看内存"></a>查看内存</h2><pre><code class="hljs shell">free -g
+free -m</code></pre>
+
+<pre><code class="hljs shell">              total        used        free      shared  buff/cache   available
+Mem:             15           3          11           0           0          11
+Swap:             0           0           0</code></pre>
+
+<h1 id="查看系统负载"><a href="#查看系统负载" class="headerlink" title="查看系统负载"></a>查看系统负载</h1><pre><code class="hljs livecodeserver">uptime
+<span class="hljs-built_in">load</span> <span class="hljs-built_in">average</span>：<span class="hljs-number">0.00</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0.05</span>
+              <span class="hljs-number">1</span><span class="hljs-built_in">min</span>  <span class="hljs-number">5</span><span class="hljs-built_in">min</span>  <span class="hljs-number">15</span><span class="hljs-built_in">min</span>
+              这三个值不要超过<span class="hljs-number">10</span>，否则认为此物理服务器有问题
+
+如果有个别进程很高，去<span class="hljs-keyword">command</span>查看下命令看看它时做什么的
+然后去看它的<span class="hljs-built_in">load</span> <span class="hljs-built_in">average</span>：都是<span class="hljs-number">100</span> ，那么就有问题了，服务夯住了，代码级别，硬件级别（内存条坏了），最后一招万能的重启（硬件问题起不来）</code></pre>
+
+<pre><code class="hljs angelscript">top
+top - <span class="hljs-number">16</span>:<span class="hljs-number">44</span>:<span class="hljs-number">02</span> up <span class="hljs-number">4</span> days, <span class="hljs-number">19</span>:<span class="hljs-number">01</span>,  <span class="hljs-number">1</span> user,  load average: <span class="hljs-number">0.00</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0.05</span>
+Tasks: <span class="hljs-number">116</span> total,   <span class="hljs-number">1</span> running, <span class="hljs-number">115</span> sleeping,   <span class="hljs-number">0</span> stopped,   <span class="hljs-number">0</span> zombie
+%Cpu(s):  <span class="hljs-number">0.2</span> us,  <span class="hljs-number">0.2</span> sy,  <span class="hljs-number">0.0</span> ni, <span class="hljs-number">99.7</span> id,  <span class="hljs-number">0.0</span> wa,  <span class="hljs-number">0.0</span> hi,  <span class="hljs-number">0.0</span> si,  <span class="hljs-number">0.0</span> st
+KiB Mem : <span class="hljs-number">16268348</span> total, <span class="hljs-number">11779256</span> free,  <span class="hljs-number">3524652</span> used,   <span class="hljs-number">964440</span> buff/cache
+KiB Swap:        <span class="hljs-number">0</span> total,        <span class="hljs-number">0</span> free,        <span class="hljs-number">0</span> used. <span class="hljs-number">12484732</span> avail Mem
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ <span class="hljs-number">1164</span> root      <span class="hljs-number">20</span>   <span class="hljs-number">0</span>  <span class="hljs-number">585292</span>  <span class="hljs-number">30780</span>   <span class="hljs-number">8488</span> S   <span class="hljs-number">0.3</span>  <span class="hljs-number">0.2</span>  <span class="hljs-number">18</span>:<span class="hljs-number">03.34</span> jdog-kunlu+
+ <span class="hljs-number">1561</span> root      <span class="hljs-number">20</span>   <span class="hljs-number">0</span>  <span class="hljs-number">921640</span>  <span class="hljs-number">18672</span>   <span class="hljs-number">6204</span> S   <span class="hljs-number">0.3</span>  <span class="hljs-number">0.1</span>  <span class="hljs-number">27</span>:<span class="hljs-number">34.59</span> MonitorPlu+
+<span class="hljs-number">20073</span> hadoop    <span class="hljs-number">20</span>   <span class="hljs-number">0</span>  <span class="hljs-number">161952</span>   <span class="hljs-number">2212</span>   <span class="hljs-number">1560</span> R   <span class="hljs-number">0.3</span>  <span class="hljs-number">0.0</span>   <span class="hljs-number">0</span>:<span class="hljs-number">00.03</span> top
+<span class="hljs-number">21481</span> hadoop    <span class="hljs-number">20</span>   <span class="hljs-number">0</span> <span class="hljs-number">3018228</span> <span class="hljs-number">488508</span>  <span class="hljs-number">19396</span> S   <span class="hljs-number">0.3</span>  <span class="hljs-number">3.0</span>   <span class="hljs-number">5</span>:<span class="hljs-number">05.84</span> java
+<span class="hljs-number">21655</span> hadoop    <span class="hljs-number">20</span>   <span class="hljs-number">0</span> <span class="hljs-number">2868732</span> <span class="hljs-number">321296</span>  <span class="hljs-number">19332</span> S   <span class="hljs-number">0.3</span>  <span class="hljs-number">2.0</span>   <span class="hljs-number">2</span>:<span class="hljs-number">34.08</span> java
+    <span class="hljs-number">1</span> root      <span class="hljs-number">20</span>   <span class="hljs-number">0</span>  <span class="hljs-number">191104</span>   <span class="hljs-number">3940</span>   <span class="hljs-number">2508</span> S   <span class="hljs-number">0.0</span>  <span class="hljs-number">0.0</span>   <span class="hljs-number">0</span>:<span class="hljs-number">50.59</span> systemd
+    <span class="hljs-number">2</span> root      <span class="hljs-number">20</span>   <span class="hljs-number">0</span>       <span class="hljs-number">0</span>      <span class="hljs-number">0</span>      <span class="hljs-number">0</span> S   <span class="hljs-number">0.0</span>  <span class="hljs-number">0.0</span>   <span class="hljs-number">0</span>:<span class="hljs-number">00.00</span> kthreadd
+    <span class="hljs-number">3</span> root      <span class="hljs-number">20</span>   <span class="hljs-number">0</span>       <span class="hljs-number">0</span>      <span class="hljs-number">0</span>      <span class="hljs-number">0</span> S   <span class="hljs-number">0.0</span>  <span class="hljs-number">0.0</span>   <span class="hljs-number">0</span>:<span class="hljs-number">00.07</span> ksoftirqd/<span class="hljs-number">0</span>
+    <span class="hljs-number">5</span> root       <span class="hljs-number">0</span> <span class="hljs-number">-20</span>       <span class="hljs-number">0</span>      <span class="hljs-number">0</span>      <span class="hljs-number">0</span> S   <span class="hljs-number">0.0</span>  <span class="hljs-number">0.0</span>   <span class="hljs-number">0</span>:<span class="hljs-number">00.00</span> kworker/<span class="hljs-number">0</span>:+</code></pre>
+
+<h1 id="查看进程"><a href="#查看进程" class="headerlink" title="查看进程"></a>查看进程</h1><h2 id="不过滤"><a href="#不过滤" class="headerlink" title="不过滤"></a>不过滤</h2><pre><code class="hljs shell">ps -ef|grep ssh
+[hadoop@JD ~]$ ps -ef|grep ssh
+root       772     1  0 6月25 ?       00:00:01 /usr/sbin/sshd -D
+root     16280   772  0 16:14 ?        00:00:00 sshd: hadoop [priv]
+hadoop   16282 16280  0 16:14 ?        00:00:00 sshd: hadoop@pts/0
+hadoop   22006 16283  0 16:55 pts/0    00:00:00 grep --color=auto ssh</code></pre>
+
+<h2 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h2><pre><code class="hljs shell">[hadoop@JD ~]$ ps -ef|grep ssh|grep -v grep
+root       772     1  0 6月25 ?       00:00:01 /usr/sbin/sshd -D
+root     16280   772  0 16:14 ?        00:00:00 sshd: hadoop [priv]
+hadoop   16282 16280  0 16:14 ?        00:00:00 sshd: hadoop@pts/0</code></pre>
+
+<h1 id="进程端口号"><a href="#进程端口号" class="headerlink" title="进程端口号"></a>进程端口号</h1><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">先找pid，再通过pid找port</span>
+netstat -nlp｜grep 772
+netstat -nlp｜grep ssh</code></pre>
+
+<h1 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h1><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">centos6.x 7.x</span>
+service httpd start
+<span class="hljs-meta">#</span><span class="bash">centos7.x</span>
+systemctl start httpd xxx xxx xxx</code></pre>
+
+<h2 id="connect-refused"><a href="#connect-refused" class="headerlink" title="connect refused"></a>connect refused</h2><pre><code class="hljs shell">ping ip
+telnet ip port</code></pre>
+
+
             </div>
             <hr>
             <div>

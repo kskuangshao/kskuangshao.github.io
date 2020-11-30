@@ -177,6 +177,152 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/12/01/datalake/">datalake认识</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/01/datalake/">
+          
+          
+            
+          
+          datalake什么是数据湖？数据湖是一类存储数据自然格式/原始格式的系统或存储，通常是对象块或者文件，包括原始系统所产生的原始数据拷贝以及为了各类任务而产生的转化数据，包括
+
+关系型数据库中的结构化数据（行列）
+半结构化数据（csv,日志，xml，json）
+非结构化数据（email，文档，PDF等）
+二进制数据（图像，音频，视频）
+
+数据湖的定义有很多，但是基本围绕以下几个特性来展开。
+
+数据
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-01 02:11" pubdate>
+              2020-12-01
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/datalake/">datalake</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/12/01/hadoop02/">关于hadoop的基本知识</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/01/hadoop02/">
+          
+          
+            
+          
+          关于cdh-hadoopapache hadoop软件：
+1.x 基本不用 6-7年左右的项目了
+2.x 企业主流 CDH5.X系列
+3.x 尝试使用 CDH6.X系列
+下载
+http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz
+更新日志
+&lt;http://archive.cloudera.com/cdh5/c
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-01 02:06" pubdate>
+              2020-12-01
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/hadoop/">hadoop</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/12/01/spark02/">spark参数设置</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/01/spark02/">
+          
+          
+            
+          
+          spark-sql参数设置脚本参数spark-sql \
+# 一下是spark参数
+--master yarn \
+--deploy-mode client \
+--executor-cores 4 \ #executor的核心数量
+--executor-memory 19G \ #executor端的内存
+--driver-memory 8G \ #driver端的内存
+--queue root
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-01 01:54" pubdate>
+              2020-12-01
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/spark/">spark</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/11/29/spark01/">spark-start</a>
       </h1>
 
@@ -468,11 +614,12 @@ MarkDown基础基础篇视频讲解链接画图篇视频讲解链接
           
             
           
-          新创建虚拟机准备工作卸载自带的openjdk#查看java版本
-[root@hadoop001 software]# java -version
-java version &quot;1.7.0_51&quot;
-OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)
-OpenJDK 64-Bit Server VM (build
+          新创建虚拟机准备工作创建用户目录[hadoop@JD ~]$ mkdir app software sourcecode log tmp data lib
+[hadoop@JD ~]$ ll
+total 0
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 app #解压的文件 软连接
+drwxrwxr-x 2 ks ks 6 Nov 27 21:33 data #数据
+drwx
         </a>
       </p>
 
@@ -491,169 +638,6 @@ OpenJDK 64-Bit Server VM (build
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/linux/">linux</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/11/19/jvm01/">jvm虚拟机探究</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/11/19/jvm01/">
-          
-          
-            
-          
-          为什么学习jvm虚拟机
-生产上运行spark的时候时常出现GC OVERHEAD等报错
-作为对于java语言底层（深层）的了解
-
-JVM探究
-谈谈你对jvm的理解？java8虚拟机和之前的变换更新？
-
-什么是oom？什么是栈溢出StackOverFlowError？怎么分析？
-
-JVM常用调优参数？
-
-内存快照如何抓取，怎么分析Dump文件？
-
-谈谈JVM中类加载器你的认识？
-jvm中类加载器 r
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-11-19 01:26" pubdate>
-              2020-11-19
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jvm/">jvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/11/19/hive02/">生产关于hive，sparksql的问题总结</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/11/19/hive02/">
-          
-          
-            
-          
-          概念DDL数据库定义语言CREATE、ALTER、DROP、TRUNCATE、COMMENT、RENAME
-
-DML数据操纵语言SELECT、INSERT、UPDATE、DELETE、MERGE、CALL、EXPLAIN PLAN
-LOCK TABLE
-
-DCL数据库控制语言GRANT、REVOKE
-
-TCL事务控制语言SAVEPOINT设置保存点、ROLLBACK回滚、SET TRANSCATI
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-11-19 01:01" pubdate>
-              2020-11-19
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/hive/">hive</a>
-            
-              <a href="/tags/%E7%94%9F%E4%BA%A7/">生产</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/28/tez/">tez</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/28/tez/">
-          
-          
-            
-          
-          tez官网http://tez.apache.org/
-
-什么是Tez？tez是一个基于内存的计算引擎，通过允许像 Apache Hive 和 Apache Pig 这样的项目运行复杂的 DAG 任务，Tez 可用于处理数据。
-
-优点：快，节点少
-缺点：对内存要求高
-
-Tez安装部署
-查看官网选择和hadoop匹配的tez版本
-
-hadoop version
-
-
-下载
-
-http://www.ap
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-28 23:45" pubdate>
-              2020-10-28
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/hive/">hive</a>
-            
-              <a href="/tags/tez/">tez</a>
             
           </div>
         
