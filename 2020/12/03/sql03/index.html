@@ -17,7 +17,7 @@
   <meta name="description" content="ks de blog">
   <meta name="author" content="kuangshao">
   <meta name="keywords" content="">
-  <title>datalake认识 - Kskuangshao</title>
+  <title>sql03 - Kskuangshao</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-01 02:11" pubdate>
-        2020年12月1日 凌晨
+      <time datetime="2020-12-03 23:52" pubdate>
+        2020年12月3日 晚上
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      208 字
+      433 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      6
        分钟
     </span>
   
@@ -217,22 +217,110 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">datalake认识</h1>
+            <h1 style="display: none">sql03</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="datalake"><a href="#datalake" class="headerlink" title="datalake"></a>datalake</h1><h2 id="什么是数据湖？"><a href="#什么是数据湖？" class="headerlink" title="什么是数据湖？"></a>什么是数据湖？</h2><p>数据湖是一类存储数据自然格式/原始格式的系统或存储，通常是对象块或者文件，包括原始系统所产生的原始数据拷贝以及为了各类任务而产生的转化数据，包括</p>
-<ol>
-<li>关系型数据库中的结构化数据（行列）</li>
-<li>半结构化数据（csv,日志，xml，json）</li>
-<li>非结构化数据（email，文档，PDF等）</li>
-<li>二进制数据（图像，音频，视频）</li>
-</ol>
-<p>数据湖的定义有很多，但是基本围绕以下几个特性来展开。</p>
-<ol>
-<li>数据湖要有足够的存储能力，存储一个企业、组织中的所有数据</li>
-<li>数据湖可以存储海量的任意类型的数据，结构化，半结构化，非结构化的数据</li>
-<li>数据湖中</li>
-</ol>
+              <h1 id="sql小练习"><a href="#sql小练习" class="headerlink" title="sql小练习"></a>sql小练习</h1><pre><code class="hljs lsl">u01     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">21</span>       <span class="hljs-number">5</span>
+u02     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">23</span>       <span class="hljs-number">6</span>
+u03     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">22</span>       <span class="hljs-number">8</span>
+u04     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">20</span>       <span class="hljs-number">3</span>
+u01     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">23</span>       <span class="hljs-number">6</span>
+u01     <span class="hljs-number">2017</span>/<span class="hljs-number">2</span>/<span class="hljs-number">21</span>       <span class="hljs-number">8</span>
+u02     <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">23</span>       <span class="hljs-number">6</span>
+u01     <span class="hljs-number">2017</span>/<span class="hljs-number">2</span>/<span class="hljs-number">22</span>       <span class="hljs-number">4</span>
+
+建表语句
+create table action
+(userId <span class="hljs-type">string</span>,
+visitDate <span class="hljs-type">string</span>,
+visitCount int) 
+row format delimited fields terminated by <span class="hljs-string">&quot;<span class="hljs-subst">\t</span>&quot;</span>;</code></pre>
+
+<p>要求使用sql统计出每个用户累计访问次数</p>
+<p><img src="https://img-blog.csdnimg.cn/20200408105906485.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzMzMTIz,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-comment">--第三步：窗口内累加</span>
+  userid,
+  visitdate,
+  cnt1,
+  <span class="hljs-keyword">sum</span>(cnt1) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">partition</span> <span class="hljs-keyword">by</span> userid <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> visitdate) <span class="hljs-keyword">as</span> cnt2 <span class="hljs-comment">--注意这里窗口分区</span>
+<span class="hljs-keyword">from</span>
+(<span class="hljs-keyword">select</span> <span class="hljs-comment">--第二步：分组求和</span>
+  userid,
+  visitdate,
+  <span class="hljs-keyword">sum</span>(visitcount) <span class="hljs-keyword">as</span> cnt1
+<span class="hljs-keyword">from</span>
+(<span class="hljs-keyword">select</span> <span class="hljs-comment">--第一步：把月份提取出来</span>
+  userid,
+  <span class="hljs-keyword">date_format</span>(regexp_replace(visitdate,<span class="hljs-string">&#x27;/&#x27;</span>,<span class="hljs-string">&#x27;-&#x27;</span>),<span class="hljs-string">&#x27;yyyyMM&#x27;</span>) <span class="hljs-keyword">as</span>   visitdate,
+  visitcount
+<span class="hljs-keyword">from</span> <span class="hljs-keyword">action</span>)t1 <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> userid,visitdate)t2;</code></pre>
+
+
+
+
+
+
+
+<h2 id="题目二：京东"><a href="#题目二：京东" class="headerlink" title="题目二：京东"></a>题目二：京东</h2><pre><code class="hljs properties">
+<span class="hljs-attr">有50W个店铺，每个顾客访问任何一个店铺的任何一个商品时都会产生一条访问日志，</span>
+<span class="hljs-attr">访问日志存储的表名为visit，访客的用户id为user_id，被访问的店铺名称为shop</span>
+
+<span class="hljs-attr">求：</span>
+<span class="hljs-attr">1）每个店铺的UV（访客数）</span>
+<span class="hljs-attr">2）每个店铺访问次数top3的访客信息。输出店铺名称、访客id、访问次数</span>
+
+<span class="hljs-attr">u1</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u2</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u1</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u1</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u3</span>	<span class="hljs-string">c</span>
+<span class="hljs-attr">u4</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u1</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u2</span>	<span class="hljs-string">c</span>
+<span class="hljs-attr">u5</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u4</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u6</span>	<span class="hljs-string">c</span>
+<span class="hljs-attr">u2</span>	<span class="hljs-string">c</span>
+<span class="hljs-attr">u1</span>	<span class="hljs-string">b</span>
+<span class="hljs-attr">u2</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u2</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u3</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u5</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u5</span>	<span class="hljs-string">a</span>
+<span class="hljs-attr">u5</span>	<span class="hljs-string">a</span>
+
+<span class="hljs-attr">建表语句</span>
+<span class="hljs-attr">create</span> <span class="hljs-string">table visit(user_id string,shop string) row format delimited fields terminated by &#x27;\t&#x27;;</span></code></pre>
+
+<pre><code class="hljs sql">
+<span class="hljs-keyword">select</span>
+  shop,
+  <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">as</span> <span class="hljs-keyword">num</span>
+ <span class="hljs-keyword">from</span>
+ (<span class="hljs-keyword">select</span>
+  shop,
+  user_ida
+<span class="hljs-keyword">from</span> visit <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> shop,user_id) t1 
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> shop; <span class="hljs-comment">--uv记得去重</span>
+
+
+<span class="hljs-keyword">select</span> <span class="hljs-comment">--第三步：拿到前三</span>
+  shop,
+  user_id,
+  cnt
+  <span class="hljs-keyword">from</span>
+(<span class="hljs-keyword">select</span> <span class="hljs-comment">--第二层：给每个访客排序，从上往下一次减少</span>
+  shop,
+  user_id,
+  cnt,
+  row_number() <span class="hljs-keyword">over</span>(<span class="hljs-keyword">partition</span> <span class="hljs-keyword">by</span> shop <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> cnt <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> rn
+  <span class="hljs-keyword">from</span>
+(<span class="hljs-keyword">select</span> <span class="hljs-comment">--第一层：得到每个访客在每个店铺的次数</span>
+  user_id,
+  shop,
+  <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">as</span> cnt
+<span class="hljs-keyword">from</span> visit <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id,shop)t1)t2 <span class="hljs-keyword">where</span> rn &lt;= <span class="hljs-number">3</span>;</code></pre>
+
 
             </div>
             <hr>
@@ -243,7 +331,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/datalake/">datalake</a>
+                      <a class="hover-with-bg" href="/tags/sql/">sql</a>
+                    
+                      <a class="hover-with-bg" href="/tags/hive-practice/">hive - practice</a>
                     
                   </div>
                 
@@ -256,18 +346,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/03/sql03/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">sql03</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/01/hadoop02/">
-                        <span class="hidden-mobile">关于hadoop的基本知识</span>
+                      <a href="/2020/12/01/datalake/">
+                        <span class="hidden-mobile">datalake认识</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -403,7 +487,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "datalake认识&nbsp;",
+        "sql03&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

@@ -693,8 +693,7 @@ n <span class="hljs-keyword">FOLLOWING</span> 往后n行
 <span class="hljs-constructor">LEAD(<span class="hljs-params">col</span>,<span class="hljs-params">n</span>)</span>： 往后第n行数据
 <span class="hljs-constructor">NTILE(<span class="hljs-params">n</span>)</span>：把有序分区中的行分发到指定数据组中，各个组有编号，编号从<span class="hljs-number">1</span>开始，对于每一行，NTILE返回此行所属的组的编号。（注意：n必须为<span class="hljs-built_in">int</span>类型）</code></pre>
 
-
-
+<h3 id="rank"><a href="#rank" class="headerlink" title="rank"></a>rank</h3><p>RANK() 排序相同会重复 ， 总数不会变<br>DENSE_RAND()排序会重复， 总数会变<br>ROW_NUMBER()会根据顺序计算</p>
 <ul>
 <li>需求</li>
 </ul>
@@ -790,7 +789,7 @@ toms,2017-04-12,20</code></pre>
 <pre><code class="hljs sql"><span class="hljs-keyword">select</span> collect_set(<span class="hljs-keyword">id</span>) <span class="hljs-keyword">from</span> student;</code></pre>
 
 <ul>
-<li><p>explode(col)，将hive中一列中复杂的asrray或者map结构拆分成多行</p>
+<li><p>explode(col)，将hive中一列中复杂的array或者map结构拆分成多行</p>
 </li>
 <li><p>lateral view</p>
 </li>
@@ -799,6 +798,15 @@ toms,2017-04-12,20</code></pre>
  movie,
  categroy_name
 <span class="hljs-keyword">from</span> movie_info <span class="hljs-keyword">lateral</span> <span class="hljs-keyword">view</span> <span class="hljs-keyword">explode</span>(<span class="hljs-keyword">category</span>) table_tmp <span class="hljs-keyword">as</span> category_name;</code></pre>
+
+<h2 id="写sql顺序"><a href="#写sql顺序" class="headerlink" title="写sql顺序"></a>写sql顺序</h2><pre><code class="hljs sql"><span class="hljs-keyword">select</span>
+<span class="hljs-keyword">from</span>
+<span class="hljs-keyword">join</span> <span class="hljs-keyword">on</span>
+<span class="hljs-keyword">where</span>
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span>
+<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span>
+<span class="hljs-keyword">having</span>
+<span class="hljs-keyword">limit</span></code></pre>
 
 
             </div>
