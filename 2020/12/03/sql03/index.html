@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      433 字
+      2k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      33
        分钟
     </span>
   
@@ -261,7 +261,7 @@ row format delimited fields terminated by <span class="hljs-string">&quot;<span 
 
 
 
-<h2 id="题目二：京东"><a href="#题目二：京东" class="headerlink" title="题目二：京东"></a>题目二：京东</h2><pre><code class="hljs properties">
+<h2 id="练习2：京东"><a href="#练习2：京东" class="headerlink" title="练习2：京东"></a>练习2：京东</h2><pre><code class="hljs properties">
 <span class="hljs-attr">有50W个店铺，每个顾客访问任何一个店铺的任何一个商品时都会产生一条访问日志，</span>
 <span class="hljs-attr">访问日志存储的表名为visit，访客的用户id为user_id，被访问的店铺名称为shop</span>
 
@@ -321,6 +321,317 @@ row format delimited fields terminated by <span class="hljs-string">&quot;<span 
   <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">as</span> cnt
 <span class="hljs-keyword">from</span> visit <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id,shop)t1)t2 <span class="hljs-keyword">where</span> rn &lt;= <span class="hljs-number">3</span>;</code></pre>
 
+<h2 id="练习3：蚂蚁森林"><a href="#练习3：蚂蚁森林" class="headerlink" title="练习3：蚂蚁森林"></a>练习3：蚂蚁森林</h2><h2 id="背景说明："><a href="#背景说明：" class="headerlink" title="背景说明："></a>背景说明：</h2><p>以下表记录了用户每天的蚂蚁森林低碳生活领取的记录流水。</p>
+<p>user_low_carbon user_id data_dt low_carbon</p>
+<p>用户 日期 减少碳排放</p>
+<pre><code class="hljs txt">u_001	2017/1/1	10
+u_001	2017/1/2	150
+u_001	2017/1/2	110
+u_001	2017/1/2	10
+u_001	2017/1/4	50
+u_001	2017/1/4	10
+u_001	2017/1/6	45
+u_001	2017/1/6	90
+u_002	2017/1/1	10
+u_002	2017/1/2	150
+u_002	2017/1/2	70
+u_002	2017/1/3	30
+u_002	2017/1/3	80
+u_002	2017/1/4	150
+u_002	2017/1/5	101
+u_002	2017/1/6	68
+u_003	2017/1/1	20
+u_003	2017/1/2	10
+u_003	2017/1/2	150
+u_003	2017/1/3	160
+u_003	2017/1/4	20
+u_003	2017/1/5	120
+u_003	2017/1/6	20
+u_003	2017/1/7	10
+u_003	2017/1/7	110
+u_004	2017/1/1	110
+u_004	2017/1/2	20
+u_004	2017/1/2	50
+u_004	2017/1/3	120
+u_004	2017/1/4	30
+u_004	2017/1/5	60
+u_004	2017/1/6	120
+u_004	2017/1/7	10
+u_004	2017/1/7	120
+u_005	2017/1/1	80
+u_005	2017/1/2	50
+u_005	2017/1/2	80
+u_005	2017/1/3	180
+u_005	2017/1/4	180
+u_005	2017/1/4	10
+u_005	2017/1/5	80
+u_005	2017/1/6	280
+u_005	2017/1/7	80
+u_005	2017/1/7	80
+u_006	2017/1/1	40
+u_006	2017/1/2	40
+u_006	2017/1/2	140
+u_006	2017/1/3	210
+u_006	2017/1/3	10
+u_006	2017/1/4	40
+u_006	2017/1/5	40
+u_006	2017/1/6	20
+u_006	2017/1/7	50
+u_006	2017/1/7	240
+u_007	2017/1/1	130
+u_007	2017/1/2	30
+u_007	2017/1/2	330
+u_007	2017/1/3	30
+u_007	2017/1/4	530
+u_007	2017/1/5	30
+u_007	2017/1/6	230
+u_007	2017/1/7	130
+u_007	2017/1/7	30
+u_008	2017/1/1	160
+u_008	2017/1/2	60
+u_008	2017/1/2	60
+u_008	2017/1/3	60
+u_008	2017/1/4	260
+u_008	2017/1/5	360
+u_008	2017/1/6	160
+u_008	2017/1/7	60
+u_008	2017/1/7	60
+u_009	2017/1/1	70
+u_009	2017/1/2	70
+u_009	2017/1/2	70
+u_009	2017/1/3	170
+u_009	2017/1/4	270
+u_009	2017/1/5	70
+u_009	2017/1/6	70
+u_009	2017/1/7	70
+u_009	2017/1/7	70
+u_010	2017/1/1	90
+u_010	2017/1/2	90
+u_010	2017/1/2	90
+u_010	2017/1/3	90
+u_010	2017/1/4	90
+u_010	2017/1/4	80
+u_010	2017/1/5	90
+u_010	2017/1/5	90
+u_010	2017/1/6	190
+u_010	2017/1/7	90
+u_010	2017/1/7	90
+u_011	2017/1/1	110
+u_011	2017/1/2	100
+u_011	2017/1/2	100
+u_011	2017/1/3	120
+u_011	2017/1/4	100
+u_011	2017/1/5	100
+u_011	2017/1/6	100
+u_011	2017/1/7	130
+u_011	2017/1/7	100
+u_012	2017/1/1	10
+u_012	2017/1/2	120
+u_012	2017/1/2	10
+u_012	2017/1/3	10
+u_012	2017/1/4	50
+u_012	2017/1/5	10
+u_012	2017/1/6	20
+u_012	2017/1/7	10
+u_012	2017/1/7	10
+u_013	2017/1/1	50
+u_013	2017/1/2	150
+u_013	2017/1/2	50
+u_013	2017/1/3	150
+u_013	2017/1/4	550
+u_013	2017/1/5	350
+u_013	2017/1/6	50
+u_013	2017/1/7	20
+u_013	2017/1/7	60
+u_014	2017/1/1	220
+u_014	2017/1/2	120
+u_014	2017/1/2	20
+u_014	2017/1/3	20
+u_014	2017/1/4	20
+u_014	2017/1/5	250
+u_014	2017/1/6	120
+u_014	2017/1/7	270
+u_014	2017/1/7	20
+u_015	2017/1/1	10
+u_015	2017/1/2	20
+u_015	2017/1/2	10
+u_015	2017/1/3	10
+u_015	2017/1/4	20
+u_015	2017/1/5	70
+u_015	2017/1/6	10
+u_015	2017/1/7	80
+u_015	2017/1/7	60
+</code></pre>
+
+<p>蚂蚁森林植物换购表，用于记录申领环保植物所需要减少的碳排放量</p>
+<p>plant_carbon plant_id plant_name low_carbon</p>
+<p>植物编号 植物名 换购植物所需要的碳</p>
+<pre><code class="hljs angelscript">p001	梭梭树	<span class="hljs-number">17</span>
+p002	沙柳	<span class="hljs-number">19</span>
+p003	樟子树	<span class="hljs-number">146</span>
+p004	胡杨	<span class="hljs-number">215</span></code></pre>
+
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
+<li>蚂蚁森林植物申领统计</li>
+</ol>
+<p>问题：假设2017年1月1日开始记录低碳数据（user_low_carbon），假设2017年10月1日之前满足申领条件的用户都申领了一颗 p004-胡杨，剩余的能量全部用来领取“p002-沙柳”。统计在10月1日累计申领“p002-沙柳”排名前10的用户信息；以及他比后一名多领了几颗沙柳。<br>得到的统计结果如下表样式：</p>
+<pre><code class="hljs angelscript">user_id plant_count less_count(比后一名多领了几颗沙柳)
+u_101	<span class="hljs-number">1000</span>	<span class="hljs-number">100</span>
+u_088	<span class="hljs-number">900</span>		<span class="hljs-number">400</span>
+u_103	<span class="hljs-number">500</span>		...</code></pre>
+
+<ol start="2">
+<li>蚂蚁森林低碳用户排名分析</li>
+</ol>
+<p>问题：查询user_low_carbon表中每日流水记录，条件为：</p>
+<ul>
+<li>用户在2017年，连续三天（或以上）的天数里，</li>
+<li>每天减少碳排放（low_carbon）都超过100g的用户低碳流水。</li>
+</ul>
+<p>需要查询返回满足以上条件的user_low_carbon表中的记录流水。</p>
+<p>例如用户u_002符合条件的记录如下，因为2017/1/2~2017/1/5连续四天的碳排放量之和都大于等于100g：</p>
+<pre><code class="hljs apache"><span class="hljs-attribute">seq</span>（key） user_id data_dt low_carbon
+<span class="hljs-attribute">xxxxx10</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">2</span> <span class="hljs-number">150</span>
+<span class="hljs-attribute">xxxxx11</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">2</span> <span class="hljs-number">70</span>
+<span class="hljs-attribute">xxxxx12</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">3</span> <span class="hljs-number">30</span>
+<span class="hljs-attribute">xxxxx13</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">3</span> <span class="hljs-number">80</span>
+<span class="hljs-attribute">xxxxx14</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">4</span> <span class="hljs-number">150</span>
+<span class="hljs-attribute">xxxxx14</span> u_<span class="hljs-number">002</span> <span class="hljs-number">2017</span>/<span class="hljs-number">1</span>/<span class="hljs-number">5</span> <span class="hljs-number">101</span></code></pre>
+
+
+
+<h3 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h3><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> user_low_carbon(user_id <span class="hljs-keyword">String</span>,data_dt <span class="hljs-keyword">String</span>,low_carbon <span class="hljs-built_in">int</span>) <span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span>;
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> plant_carbon(plant_id <span class="hljs-keyword">string</span>,plant_name <span class="hljs-keyword">String</span>,low_carbon <span class="hljs-built_in">int</span>) <span class="hljs-keyword">row</span> <span class="hljs-keyword">format</span> <span class="hljs-keyword">delimited</span> <span class="hljs-keyword">fields</span> <span class="hljs-keyword">terminated</span> <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span>;</code></pre>
+
+<h3 id="设置本地模式"><a href="#设置本地模式" class="headerlink" title="设置本地模式"></a>设置本地模式</h3><pre><code class="hljs shell">set hive.exec.mode.local.auto=true;</code></pre>
+
+<h3 id="第一种思路写法"><a href="#第一种思路写法" class="headerlink" title="第一种思路写法"></a>第一种思路写法</h3><pre><code class="hljs sql">hive&gt; desc user_low_carbon;
+OK
+user_id                 string
+data_dt                 string
+low_carbon              int
+
+
+hive&gt; desc plant_carbon;
+OK
+plant_id                string
+plant_name              string
+low_carbon              int
+
+1.取大于2017/1/1 小于2017/10/1每个用户的总排放量
+<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">sum</span>(low_carbon) <span class="hljs-keyword">as</span> sum_low_carbon
+<span class="hljs-keyword">from</span> user_low_carbon
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id;
+
+2.胡杨碳排放
+<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p004&#x27;</span>;
+
+3.沙柳碳排放
+<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p002&#x27;</span>;
+
+4.每个用户沙柳的个数
+<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">floor</span>((sum_low_carbon-t2.low_carbon)/t3.low_carbon) <span class="hljs-keyword">as</span> plant_count
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">sum</span>(low_carbon) <span class="hljs-keyword">as</span> sum_low_carbon
+<span class="hljs-keyword">from</span> user_low_carbon
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id)t1,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p004&#x27;</span>)t2,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p002&#x27;</span>)t3;
+
+5.上推一格做出一列相减
+<span class="hljs-keyword">select</span>
+    user_id,
+    plant_count,
+    <span class="hljs-keyword">lead</span>(plant_count,<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;9999-99-99&#x27;</span>) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> plant_count <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> lead_plant_count
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">floor</span>((sum_low_carbon-t2.low_carbon)/t3.low_carbon) <span class="hljs-keyword">as</span> plant_count
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">sum</span>(low_carbon) <span class="hljs-keyword">as</span> sum_low_carbon
+<span class="hljs-keyword">from</span> user_low_carbon
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id)t1,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p004&#x27;</span>)t2,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p002&#x27;</span>)t3)t4;
+
+6.沙柳的个数相减
+<span class="hljs-keyword">select</span>
+    user_id,
+    plant_count,
+    plant_count - lead_plant_count <span class="hljs-keyword">as</span> plant_count_diff
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    plant_count,
+    <span class="hljs-keyword">lead</span>(plant_count,<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;9999-99-99&#x27;</span>) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> plant_count <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> lead_plant_count
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">floor</span>((sum_low_carbon-t2.low_carbon)/t3.low_carbon) <span class="hljs-keyword">as</span> plant_count
+<span class="hljs-keyword">from</span> 
+(<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">sum</span>(low_carbon) <span class="hljs-keyword">as</span> sum_low_carbon
+<span class="hljs-keyword">from</span> user_low_carbon
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id)t1,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p004&#x27;</span>)t2,
+(<span class="hljs-keyword">select</span>
+    plant_id,
+    low_carbon
+<span class="hljs-keyword">from</span> plant_carbon
+<span class="hljs-keyword">where</span> plant_id = <span class="hljs-string">&#x27;p002&#x27;</span>)t3)t4)t5
+<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> plant_count <span class="hljs-keyword">desc</span>
+<span class="hljs-keyword">limit</span> <span class="hljs-number">10</span>;
+</code></pre>
+
+<h3 id="第二种方式（改进版）"><a href="#第二种方式（改进版）" class="headerlink" title="第二种方式（改进版）"></a>第二种方式（改进版）</h3><p>第一种方式如果数据量很大，那么效率极低，因为我们不需要把所有的行全拿出来做运算和排序，我们只需要拿出top10的行并对其操作，所以改进如下</p>
+<pre><code class="hljs sql">1.取大于2017/1/1 小于2017/10/1每个用户的总排放量
+<span class="hljs-keyword">select</span>
+    user_id,
+    <span class="hljs-keyword">sum</span>(low_carbon) <span class="hljs-keyword">as</span> sum_low_carbon
+<span class="hljs-keyword">from</span> user_low_carbon
+<span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> user_id
+<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> sum_low_carbon <span class="hljs-keyword">desc</span>
+<span class="hljs-keyword">limit</span> <span class="hljs-number">11</span>;<span class="hljs-comment">--一开始就限制11条，因为用lead上提，所以需要多一行数据用来提上去</span></code></pre>
+
+
+
 
             </div>
             <hr>
@@ -347,6 +658,12 @@ row format delimited fields terminated by <span class="hljs-string">&quot;<span 
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/12/09/jvm001/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">jvm虚拟机探究</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
